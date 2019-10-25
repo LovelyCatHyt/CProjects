@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1572008243 source:d:\cprojects\homework\20191025\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+

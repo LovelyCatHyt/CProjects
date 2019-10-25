@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1571627029 source:d:\cprojects\experiment\exp3_2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
