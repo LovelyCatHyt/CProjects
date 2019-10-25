@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <time.h>
 int main()
 {
-    int a,b;
-    printf("Please enter two numbers,separated by \',\'.\n");
-    scanf("%d,%d",&a,&b);
-    printf("You enter: a = %d, b = %d.\n",a,b);
-    printf("There sum is %d.\n",a+b);
-    printf("Test successfully.\n");
+    long l;
+    for(l=0;l<40000000;l++)
+    {
+
+    }
+    printf("%ld",clock());
     return 0;
 }

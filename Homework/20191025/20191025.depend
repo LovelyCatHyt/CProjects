@@ -1,14 +1,15 @@
 # depslib dependency file v1.0
-1572011298 source:d:\cprojects\homework\20191025\main.c
+1572016153 source:d:\cprojects\homework\20191025\main.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
 	<conio.h>
-	"Tools.c"
+	<dos.h>
 
 1572011747 d:\cprojects\homework\20191025\tools.c
 	<windows.h>
 
-1572011747 source:d:\cprojects\homework\20191025\tools.c
+1572016218 source:d:\cprojects\homework\20191025\tools.c
 	<windows.h>
+	<time.h>
 

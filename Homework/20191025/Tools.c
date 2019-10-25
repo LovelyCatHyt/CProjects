@@ -1,10 +1,11 @@
 #include <windows.h>
+#include <time.h>
 
 /*设置光标位置*/
 void SetPos(int x,int y)
 {
     COORD pos;
-HANDLE handle;
+    HANDLE handle;
     pos.X=x;
     pos.Y=y;
     handle=GetStdHandle(STD_OUTPUT_HANDLE);
@@ -27,4 +28,10 @@ void SetColor(unsigned short ForeColor,unsigned short BackGroundColor)
 */
 HANDLE handle=GetStdHandle(STD_OUTPUT_HANDLE);/*获取当前窗口句柄*/
 SetConsoleTextAttribute(handle,ForeColor+(BackGroundColor<<4));/*设置颜色*/
+}
+
+void Delay(long clocknum)
+{
+    clock_t start = clock();
+    while(clock() - start<clocknum);
 }
