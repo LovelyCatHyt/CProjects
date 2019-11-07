@@ -25,13 +25,13 @@ void Sort(int a[],int len)
             {
                 /*刷新输出界面*/
                 PrtSortingTip(a,len,i,i+1,j);
-                Delay(250);
+                getch();
                 temp = a[i];
                 a[i] = a[i+1];
                 a[i+1] = temp;
                 /*刷新输出界面*/
                 PrtSortingTip(a,len,i+1,i,j);
-                Delay(250);
+                getch();
             }
         }
     }
@@ -86,7 +86,6 @@ int main()
     PrintArray(a,length);
     printf("\nPress any key to continue.");
     getch();
-    Delay(2000);
     /*排序*/
     Sort(a,length);
     /*输出排序后数组*/
