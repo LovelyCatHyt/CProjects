@@ -3,3 +3,5 @@
 *.pptx
 .docx
 Homework/20191025/doc/
+*.depend
+Test/
