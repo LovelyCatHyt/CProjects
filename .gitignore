@@ -8,3 +8,5 @@ Test/
 *.layout
 *.cbp
 *.o
+*.pdf
+*.exe
