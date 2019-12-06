@@ -1,0 +1,1 @@
+void Delay(float delay);
