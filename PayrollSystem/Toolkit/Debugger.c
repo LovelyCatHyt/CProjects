@@ -11,7 +11,7 @@ void Test()
 {
     Payroll pr;
     Payroll_Initialize(&pr,"CSU200501","ÕÅÈý",3000,900,5000,50,100,20,560,8900,525,8375);
-    printf("pr's ID = %s, name = %s",(char *)pr.ID->array,(char *)pr.name->array);
+    PrintPayroll(pr,1);
 }
 
 void PrintCurrentTime()
