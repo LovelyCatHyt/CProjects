@@ -35,5 +35,9 @@ void Payroll_Initialize(
     float takeHomePay
 );
 
+void Payroll_FreeFArray(Payroll pr);
+
 void PrintPayroll(Payroll pr,int withTag);
+
+void PrintPayrolls(Payroll *prs,int arraySize);
 #endif // _PAYROLL_H_

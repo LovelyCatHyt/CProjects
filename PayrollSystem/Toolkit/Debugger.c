@@ -9,9 +9,10 @@
 
 void Test()
 {
-    Payroll pr;
-    Payroll_Initialize(&pr,"CSU200501","уехЩ",3000,900,5000,50,100,20,560,8900,525,8375);
-    PrintPayroll(pr,1);
+    FArray payrolls;
+    FArray_Initialize(&payrolls,sizeof(Payroll),0);
+    GetPayrolls(&payrolls);
+    PrintPayrolls((Payroll *)payrolls.array,payrolls.arraySize);
 }
 
 void PrintCurrentTime()

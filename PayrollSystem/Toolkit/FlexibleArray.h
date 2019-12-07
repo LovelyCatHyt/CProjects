@@ -8,6 +8,8 @@ typedef struct
     int arraySize;
 }FArray;
 
+int FArray_Initialize(FArray *a , int unitSize, int arraySize);
+
 void FArray_Free(FArray *a);
 
 void FArray_Add(FArray *a, void *element);

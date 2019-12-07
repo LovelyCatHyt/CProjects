@@ -35,7 +35,12 @@ void Payroll_Initialize(
     pr->salary = salary;
     pr->incomeTax = incomeTax;
     pr->takeHomePay = takeHomePay;
-    return pr;
+}
+
+void Payroll_FreeFArray(Payroll pr)
+{
+    FArray_Free(&(pr.ID));
+    FArray_Free(&(pr.name));
 }
 
 void PrintPayroll(Payroll pr,int withTag)
@@ -44,7 +49,7 @@ void PrintPayroll(Payroll pr,int withTag)
     {
         printf("职工编号  姓名   基本工资 职务工资 津贴     医疗保险 养老保险 失业保险 公积金   应发工资 个人税   实发工资\n");
     }
-    printf("%-9s %-6s %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f",
+    printf("%-9s %-6s %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f\n",
            (char *)pr.ID.array,
            (char *)pr.name.array,
            pr.baseWage,
