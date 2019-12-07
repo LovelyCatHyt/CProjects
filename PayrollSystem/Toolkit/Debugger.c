@@ -1,12 +1,17 @@
+#ifndef _DEBUGGER_C_
+#define _DEBUGGER_C_
+
 #include <stdio.h>
 #include <time.h>
 #include "Debugger.h"
 #include "ColorfulConsoler.h"
-#include "FlexibleArray.h"
+#include "../Data/Payroll.h"
 
 void Test()
 {
-
+    Payroll pr;
+    Payroll_Initialize(&pr,"CSU200501","ÕÅÈý",3000,900,5000,50,100,20,560,8900,525,8375);
+    printf("pr's ID = %s, name = %s",(char *)pr.ID->array,(char *)pr.name->array);
 }
 
 void PrintCurrentTime()
@@ -67,3 +72,5 @@ void PrintError(char *error)
     }
     SetColor(WHITE,BLACK);
 }
+
+#endif // _DEBUGGER_

@@ -1,5 +1,5 @@
-#ifndef FLEXIBLEARRAY
-#define FLEXIBLEARRAY
+#ifndef _FLEXIBLEARRAY_C_
+#define _FLEXIBLEARRAY_C_
 #include "FlexibleArray.h"
 #include <string.h>
 #include <stdlib.h>
