@@ -3,13 +3,15 @@
 #include "FlexibleArray.h"
 #include <string.h>
 #include <stdlib.h>
+#include "Debugger.h"
 
-FArray* FArray_Initialize(int unitSize, int arraySize)
+int FArray_Initialize(FArray *a , int unitSize, int arraySize)
 {
-    FArray* a = calloc(1,sizeof(FArray));
+    a->arraySize = 0;
     a->array = calloc(unitSize, arraySize);
     a->unitSize = unitSize;
     a->arraySize = arraySize;
+    return a!=NULL?1:0;
 }
 
 void FArray_Clear(FArray *a)

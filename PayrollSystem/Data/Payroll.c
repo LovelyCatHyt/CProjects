@@ -19,13 +19,12 @@ void Payroll_Initialize(
     float incomeTax,
     float takeHomePay)
 {
-    int length;
-    length = strlen(ID);
-    pr->ID = FArray_Initialize(sizeof(char),length);
-    memcpy(pr->ID->array,ID,length);
-    length = strlen(name);
-    pr->name = FArray_Initialize(sizeof(char),length);
-    memcpy(pr->name->array,name,length);
+
+    FArray_Initialize(&pr->ID,sizeof(char),strlen(ID));
+    memcpy(pr->ID.array,ID,strlen(ID));
+    FArray_Initialize(&pr->name,sizeof(char),strlen(name));
+    memcpy(pr->name.array,name,strlen(name));
+
     pr->baseWage = baseWage;
     pr->dutyWage = dutyWage;
     pr->bonus = bonus;
@@ -46,8 +45,8 @@ void PrintPayroll(Payroll pr,int withTag)
         printf("职工编号  姓名   基本工资 职务工资 津贴     医疗保险 养老保险 失业保险 公积金   应发工资 个人税   实发工资\n");
     }
     printf("%-9s %-6s %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f",
-           (char *)pr.ID->array,
-           (char *)pr.name->array,
+           (char *)pr.ID.array,
+           (char *)pr.name.array,
            pr.baseWage,
            pr.dutyWage,
            pr.bonus,

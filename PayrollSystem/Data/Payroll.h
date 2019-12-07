@@ -5,8 +5,8 @@
 
 typedef struct
 {
-    FArray *ID;
-    FArray *name;
+    FArray ID;
+    FArray name;
     float baseWage;
     float dutyWage;
     float bonus;
