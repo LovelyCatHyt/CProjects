@@ -12,3 +12,4 @@ Test/
 *.exe
 *.gch
 *.bmarks
+*.cscope_file_list
