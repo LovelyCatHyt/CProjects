@@ -2,13 +2,11 @@
 #include <time.h>
 #include "Debugger.h"
 #include "ColorfulConsoler.h"
-#include "BetterIO.h"
+#include "FlexibleArray.h"
 
 void Test()
 {
-    PrintLog("This is a log from Debugger.\n");
-    Delay(1.0);
-    PrintError("This is an Error from Debugger.");
+
 }
 
 void PrintCurrentTime()
@@ -16,7 +14,7 @@ void PrintCurrentTime()
     struct tm *t;
     time_t lct = time(NULL);
     t = localtime(&lct);
-    printf("%2d:%2d:%2d",t->tm_hour,t->tm_min,t->tm_sec);
+    printf("%02d:%02d:%02d",t->tm_hour,t->tm_min,t->tm_sec);
 }
 
 void PrintLog(char *log)
