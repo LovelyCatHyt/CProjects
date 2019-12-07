@@ -14,16 +14,10 @@ int FArray_Initialize(FArray *a , int unitSize, int arraySize)
     return a!=NULL?1:0;
 }
 
-void FArray_Clear(FArray *a)
+void FArray_Free(FArray *a)
 {
     free(a->array);
     a->arraySize = 0;
-}
-
-void FArray_Free(FArray *a)
-{
-    FArray_Clear(a);
-    free(a);
 }
 
 void FArray_Add(FArray *a, void *element)

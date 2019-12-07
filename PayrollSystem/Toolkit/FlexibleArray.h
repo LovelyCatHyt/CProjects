@@ -8,4 +8,8 @@ typedef struct
     int arraySize;
 }FArray;
 
+void FArray_Free(FArray *a);
+
+void FArray_Add(FArray *a, void *element);
+
 #endif // _FLEXIBLEARRAY_H
