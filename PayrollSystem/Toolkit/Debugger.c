@@ -12,7 +12,11 @@ void Test()
     FArray payrolls;
     FArray_Initialize(&payrolls,sizeof(Payroll),0);
     GetPayrolls(&payrolls);
-    PrintPayrolls((Payroll *)payrolls.array,payrolls.arraySize);
+    PrintPayrollTable((Payroll *)payrolls.array,payrolls.arraySize);
+    PrintLog("Now I'm trying to sort them by ID...\n\n\n");
+    Payroll_SortByID(payrolls);
+    PrintPayrollTable((Payroll *)payrolls.array,payrolls.arraySize);
+    Payroll_FreePayrolls(payrolls);
 }
 
 void PrintCurrentTime()

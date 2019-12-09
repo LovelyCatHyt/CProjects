@@ -37,7 +37,17 @@ void Payroll_Initialize(
 
 void Payroll_FreeFArray(Payroll pr);
 
-void PrintPayroll(Payroll pr,int withTag);
+int Payroll_CmpByID(const Payroll *a, const Payroll *b);
+int Payroll_CmpByName(const Payroll *a, const Payroll *b);
+int Payroll_CmpByID(const Payroll *a, const Payroll *b);
+int Payroll_CmpByTakeHomePay(const Payroll *a, const Payroll *b);
 
-void PrintPayrolls(Payroll *prs,int arraySize);
+void Payroll_SortByID(FArray payrolls);
+void Payroll_SortByName(FArray payrolls);
+void Payroll_SortByBaseWage(FArray payrolls);
+void Payroll_SortByTakeHomePay(FArray payrolls);
+
+void PrintPayroll(Payroll pr,unsigned int foreColor,unsigned int backgroundColor);
+
+void PrintPayrollTable(Payroll *prs,int arraySize);
 #endif // _PAYROLL_H_
