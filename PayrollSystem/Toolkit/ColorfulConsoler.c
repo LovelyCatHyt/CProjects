@@ -1,16 +1,13 @@
 #ifndef _COLORFULCONSOLER_C_
 #define _COLORFULCONSOLER_C_
-#include <windows.h>
+
 #include <time.h>
 #include "ColorfulConsoler.h"
 
 /*设置光标位置*/
-void SetPos(int x,int y)
+void SetPos(COORD pos)
 {
-    COORD pos;
     HANDLE handle;
-    pos.X=x;
-    pos.Y=y;
     handle=GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleCursorPosition(handle,pos);
 }

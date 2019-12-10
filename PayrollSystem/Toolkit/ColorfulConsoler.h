@@ -1,7 +1,8 @@
 #ifndef _COLORFULCONSOLER_H_
 #define _COLORFULCONSOLER_H_
+#include <windows.h>
 
-void SetPos(int x,int y);
+void SetPos(COORD pos);
 
 #define BLACK 0
 #define BLUE 1
