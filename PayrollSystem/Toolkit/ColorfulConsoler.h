@@ -1,3 +1,6 @@
+#ifndef _COLORFULCONSOLER_H_
+#define _COLORFULCONSOLER_H_
+
 void SetPos(int x,int y);
 
 #define BLACK 0
@@ -17,3 +20,7 @@ void SetPos(int x,int y);
 #define LIGHTYELLOW 14
 #define LIGHTWHITE 15
 void SetColor(unsigned short ForeColor,unsigned short BackGroundColor);
+
+void DefaultColor();
+
+#endif // _COLORFULCONSOLER_H_

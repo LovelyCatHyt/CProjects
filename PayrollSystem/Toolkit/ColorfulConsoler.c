@@ -1,5 +1,8 @@
+#ifndef _COLORFULCONSOLER_C_
+#define _COLORFULCONSOLER_C_
 #include <windows.h>
 #include <time.h>
+#include "ColorfulConsoler.h"
 
 /*设置光标位置*/
 void SetPos(int x,int y)
@@ -30,3 +33,12 @@ void SetColor(unsigned short ForeColor,unsigned short BackGroundColor)
 HANDLE handle=GetStdHandle(STD_OUTPUT_HANDLE);/*获取当前窗口句柄*/
 SetConsoleTextAttribute(handle,ForeColor+(BackGroundColor<<4));/*设置颜色*/
 }
+
+unsigned int DefaultForeColor = 7,DefaultBackGroundColor = 0;
+
+void DefaultColor()
+{
+    SetColor(DefaultForeColor,DefaultBackGroundColor);
+}
+
+#endif // _COLORFULCONSOLER_C_
