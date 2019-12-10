@@ -2,6 +2,7 @@
 #define _PAYROLL_C_
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "Payroll.h"
 #include "../Toolkit/FlexibleArray.h"
 #include "../Toolkit/ColorfulConsoler.h"
@@ -60,24 +61,24 @@ int floatCmp(float a, float b)
 {
     float tmp = a-b;
     if(tmp>0) return 1;
-    if(tmp==0) return 0;
-    if(tmp<0) return -1;
+    else if(tmp==0) return 0;
+    else return -1;
 }
-int Payroll_CmpByID(const Payroll *a, const Payroll *b)
+int Payroll_CmpByID(const void *a, const void *b)
 {
-    return strcmp((char *)a->ID.array,(char *)b->ID.array);
+    return strcmp(((Payroll *)a)->ID.array,((Payroll *)b)->ID.array);
 }
-int Payroll_CmpByName(const Payroll *a, const Payroll *b)
+int Payroll_CmpByName(const void *a, const void *b)
 {
-    return strcmp((char *)a->name.array,(char *)b->name.array);
+    return strcmp(((Payroll *)a)->name.array,((Payroll *)b)->name.array);
 }
-int Payroll_CmpByBaseWage(const Payroll *a, const Payroll *b)
+int Payroll_CmpByBaseWage(const void *a, const void *b)
 {
-    return floatCmp(a->baseWage,b->baseWage);
+    return floatCmp(((Payroll *)a)->baseWage,((Payroll *)b)->baseWage);
 }
-int Payroll_CmpByTakeHomePay(const Payroll *a, const Payroll *b)
+int Payroll_CmpByTakeHomePay(const void *a, const void *b)
 {
-    return floatCmp(a->takeHomePay,b->takeHomePay);
+    return floatCmp(((Payroll *)a)->takeHomePay,((Payroll *)b)->takeHomePay);
 }
 
 /*一系列排序函数*/
@@ -127,7 +128,7 @@ void PrintPayroll(Payroll pr,unsigned int foreColor,unsigned int backgroundColor
 void PrintPayrollTable(Payroll *prs,int arraySize)
 {
     int i;
-    PrintTableTop(WHITE,BLUE);
+    PrintTableTop(LIGHTBLUE,BLACK);
     for(i = 0;i<arraySize;i++)
     {
         unsigned int color;

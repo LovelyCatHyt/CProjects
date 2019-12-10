@@ -35,13 +35,15 @@ void Payroll_Initialize(
     float takeHomePay
 );
 
+int GetPayrolls(FArray* payrolls);
 void Payroll_FreeFArray(Payroll pr);
-
+void Payroll_FreePayrolls(FArray payrolls);
+/*
 int Payroll_CmpByID(const Payroll *a, const Payroll *b);
 int Payroll_CmpByName(const Payroll *a, const Payroll *b);
 int Payroll_CmpByID(const Payroll *a, const Payroll *b);
 int Payroll_CmpByTakeHomePay(const Payroll *a, const Payroll *b);
-
+*/
 void Payroll_SortByID(FArray payrolls);
 void Payroll_SortByName(FArray payrolls);
 void Payroll_SortByBaseWage(FArray payrolls);

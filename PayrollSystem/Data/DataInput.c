@@ -52,9 +52,6 @@ void HardInput(FArray* payrolls)
     Payroll_Initialize(newPayroll,"CSU200501","张三",3000,900,5000,50,100,20,560,8900,525,8375);
     FArray_Add(payrolls,newPayroll);
     newPayroll = (Payroll *)malloc(sizeof(Payroll));
-    Payroll_Initialize(newPayroll,"CSU200501","张三",3000,900,5000,50,100,20,560,8900,525,8375);
-    FArray_Add(payrolls,newPayroll);
-    newPayroll = (Payroll *)malloc(sizeof(Payroll));
     Payroll_Initialize(newPayroll,"CSU200612","李四",2800,600,4000,45,80,19,550,7400,285,7115);
     FArray_Add(payrolls,newPayroll);
     newPayroll = (Payroll *)malloc(sizeof(Payroll));
