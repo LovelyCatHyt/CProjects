@@ -1,0 +1,3 @@
+[submodule "console_graphics"]
+	path = console_graphics
+	url = https://github.com/cypok/console_graphics.git
