@@ -19,15 +19,15 @@ void Test()
     Payroll_SortByBaseWage(payrolls);
     PrintPayrollTable((Payroll *)payrolls.array,payrolls.arraySize);
     Payroll_FreePayrolls(payrolls);
-
-    MenuNode testNode;
-    testNode.action = NULL;
-    testNode.childs = NULL;
-    testNode.parent = NULL;
-    strcat(testNode.lable,"TestMenu");
-    ShowMenu(SHORT2COORD(0,0),&testNode,1);
-
-    printf("WTF");*/
+    */
+    MenuNode testNodes[2];
+    MenuNode testNode1,testNode2;
+    memcpy(testNode1.lable,"TestMenu",9);
+    memcpy(testNode2.lable,"TESTMENU",9);
+    testNodes[0] = testNode1;
+    testNodes[1] = testNode2;
+    ShowMenu(SHORT2COORD(0,0),&testNodes,2);
+    system("Pause");
 }
 
 void PrintCurrentTime()
