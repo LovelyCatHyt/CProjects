@@ -4,6 +4,26 @@
 #include <time.h>
 #include "ColorfulConsoler.h"
 
+
+COORD SHORT2COORD(SHORT x,SHORT y)
+{
+    COORD result = {x,y};
+    return result;
+}
+
+/*设置一片区域的Attr*/
+void SetRectAttr(COORD beginPos,COORD endPos,WORD attr)
+{
+    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD cdCurrent;
+    DWORD width = endPos.X - beginPos.X + 1;
+    for(cdCurrent = beginPos;cdCurrent.Y<=endPos.Y;cdCurrent.Y++)
+    {
+        FillConsoleOutputAttribute(hStdout,attr,width,cdCurrent,NULL);
+    }
+
+}
+
 /*设置光标位置*/
 void SetPos(COORD pos)
 {

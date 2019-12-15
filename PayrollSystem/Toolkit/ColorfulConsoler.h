@@ -21,7 +21,8 @@ void SetPos(COORD pos);
 #define LIGHTYELLOW 14
 #define LIGHTWHITE 15
 void SetColor(unsigned short ForeColor,unsigned short BackGroundColor);
-
+void SetRectAttr(COORD beginPos,COORD endPos,WORD attr);
 void DefaultColor();
+COORD SHORT2COORD(SHORT x,SHORT y);
 
 #endif // _COLORFULCONSOLER_H_
