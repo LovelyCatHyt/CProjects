@@ -17,9 +17,10 @@ void SetRectAttr(COORD beginPos,COORD endPos,WORD attr)
     HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD cdCurrent;
     DWORD width = endPos.X - beginPos.X + 1;
+    DWORD dwTemp;
     for(cdCurrent = beginPos;cdCurrent.Y<=endPos.Y;cdCurrent.Y++)
     {
-        FillConsoleOutputAttribute(hStdout,attr,width,cdCurrent,NULL);
+        FillConsoleOutputAttribute(hStdout,attr,width,cdCurrent,&dwTemp);
     }
 
 }
