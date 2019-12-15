@@ -3,12 +3,14 @@
 
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 #include "Debugger.h"
 #include "ColorfulConsoler.h"
-#include "../Data/Payroll.h"
+#include "MenuMgr.h"
 
 void Test()
 {
+    /*
     FArray payrolls;
     FArray_Initialize(&payrolls,sizeof(Payroll),0);
     GetPayrolls(&payrolls);
@@ -17,6 +19,15 @@ void Test()
     Payroll_SortByBaseWage(payrolls);
     PrintPayrollTable((Payroll *)payrolls.array,payrolls.arraySize);
     Payroll_FreePayrolls(payrolls);
+
+    MenuNode testNode;
+    testNode.action = NULL;
+    testNode.childs = NULL;
+    testNode.parent = NULL;
+    strcat(testNode.lable,"TestMenu");
+    ShowMenu(SHORT2COORD(0,0),&testNode,1);
+
+    printf("WTF");*/
 }
 
 void PrintCurrentTime()
