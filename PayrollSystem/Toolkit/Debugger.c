@@ -8,24 +8,19 @@
 #include "ColorfulConsoler.h"
 #include "MenuMgr.h"
 #include "KeyCtrl.h"
+#include "FlexibleArray.h"
 
-void PrintSomething()
+int CmpInt(void * a, void *b)
 {
-    printf("HaHaHa\n");
+    int ia,ib;
+    ia = *((int *)a);
+    ib = *((int *)b);
+    return ia==ib;
 }
 
 void Test()
 {
     /*
-    FArray payrolls;
-    FArray_Initialize(&payrolls,sizeof(Payroll),0);
-    GetPayrolls(&payrolls);
-    PrintPayrollTable((Payroll *)payrolls.array,payrolls.arraySize);
-    PrintWarning("Now I'm trying to sort them by basewage...\n\n\n");
-    Payroll_SortByBaseWage(payrolls);
-    PrintPayrollTable((Payroll *)payrolls.array,payrolls.arraySize);
-    Payroll_FreePayrolls(payrolls);
-    */
     MenuNode testMenu[2] = {
                         {NULL,"Root0",NULL,
                             (MenuNode []){
@@ -55,7 +50,26 @@ void Test()
     {
         action();
     }
-
+    */
+    FArray a;
+    int i;
+    FArray_Initialize(&a,sizeof(int),3);
+    for(i = 0;i<3;i++)
+    {
+        ((int *)a.array)[i] = i;
+    }
+    for(int i = 0;i<3;i++)
+    {
+        printf("a.array[%d] = %d\n",i,((int *)a.array)[i]);
+    }
+    FArray_RemoveAt(&a,1);
+    printf("Remove at 1.\n");
+    for(int i = 0;i<2;i++)
+    {
+        printf("a.array[%d] = %d\n",i,((int *)a.array)[i]);
+    }
+    int temp = 2;
+    printf("Searching %d, it's index is: %d\n",temp,FArray_Search(a,&temp));
     system("Pause");
 }
 
