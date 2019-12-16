@@ -7,6 +7,12 @@
 #include "Debugger.h"
 #include "ColorfulConsoler.h"
 #include "MenuMgr.h"
+#include "KeyCtrl.h"
+
+void PrintSomething()
+{
+    printf("HaHaHa\n");
+}
 
 void Test()
 {
@@ -20,13 +26,36 @@ void Test()
     PrintPayrollTable((Payroll *)payrolls.array,payrolls.arraySize);
     Payroll_FreePayrolls(payrolls);
     */
-    MenuNode testNodes[2];
-    MenuNode testNode1,testNode2;
-    memcpy(testNode1.lable,"TestMenu",9);
-    memcpy(testNode2.lable,"TESTMENU",9);
-    testNodes[0] = testNode1;
-    testNodes[1] = testNode2;
-    ShowMenu(SHORT2COORD(0,0),&testNodes,2);
+    MenuNode testMenu[2] = {
+                        {NULL,"Root0",NULL,
+                            (MenuNode []){
+                                {
+                                    PrintSomething,
+                                    "PrintSomething",
+                                    NULL,
+                                    NULL,
+                                    0
+                                },
+                                {
+                                    PrintSomething,
+                                    "AlsoPrintSth",
+                                    NULL,
+                                    NULL,
+                                    0
+                                }
+                            }
+                        ,2},
+                        {NULL,"Root1",NULL,NULL,0}
+    };
+    void (*action)(void) = ShowMenu(SHORT2COORD(0,0),testMenu,2);
+    if(action == NULL)
+    {
+        printf("MenuExited.");
+    }else
+    {
+        action();
+    }
+
     system("Pause");
 }
 

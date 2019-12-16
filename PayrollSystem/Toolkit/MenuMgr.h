@@ -9,9 +9,10 @@ typedef struct _MenuNode
     char lable[MAX_MENU_LABLE];
     struct _MenuNode *parent;
     struct _MenuNode *childs;
+    size_t childNum;
 
 }MenuNode;
 
-void ShowMenu(COORD beginPos, MenuNode *contens, size_t arraySize);
+void (*ShowMenu(COORD cdBeginPos, MenuNode *contents, size_t arraySize))(void);
 
 #endif // _MENUMGR_H
