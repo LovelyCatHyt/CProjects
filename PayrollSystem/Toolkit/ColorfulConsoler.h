@@ -22,6 +22,7 @@ void SetPos(COORD pos);
 #define LIGHTWHITE 15
 void SetColor(unsigned short ForeColor,unsigned short BackGroundColor);
 void SetRectAttr(COORD beginPos,COORD endPos,WORD attr);
+void SetRectChar(COORD beginPos,COORD endPos,WCHAR c);
 void DefaultColor();
 COORD SHORT2COORD(SHORT x,SHORT y);
 

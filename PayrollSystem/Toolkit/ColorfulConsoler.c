@@ -24,6 +24,19 @@ void SetRectAttr(COORD beginPos,COORD endPos,WORD attr)
     }
 
 }
+//设置一片区域的字符
+void SetRectChar(COORD beginPos,COORD endPos,WCHAR c)
+{
+    
+    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD cdCurrent;
+    DWORD width = endPos.X - beginPos.X + 1;
+    DWORD dwTemp;
+    for(cdCurrent = beginPos;cdCurrent.Y<=endPos.Y;cdCurrent.Y++)
+    {
+        FillConsoleOutputCharacter(hStdout,c,width,cdCurrent,&dwTemp);
+    }
+}
 
 /*设置光标位置*/
 void SetPos(COORD pos)
