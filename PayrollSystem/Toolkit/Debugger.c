@@ -9,6 +9,7 @@
 #include "MenuMgr.h"
 #include "KeyCtrl.h"
 #include "FlexibleArray.h"
+#include "../Data/Payroll.h"
 
 int CmpInt(void * a, void *b)
 {
@@ -70,6 +71,10 @@ void Test()
     }
     int temp = 2;
     printf("Searching %d, it's index is: %d\n",temp,FArray_Search(a,&temp));
+    Payroll pr;
+    Payroll_Initialize(&pr,"CSU200501","уехЩ",3000,900,5000,50,100,20,560,0,0,0);
+    Payroll_FillContent(&pr);
+    PrintPayroll(pr,WHITE,BLACK);
     system("Pause");
 }
 

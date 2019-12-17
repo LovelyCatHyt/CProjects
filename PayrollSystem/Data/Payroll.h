@@ -44,6 +44,8 @@ int Payroll_CmpByName(const Payroll *a, const Payroll *b);
 int Payroll_CmpByID(const Payroll *a, const Payroll *b);
 int Payroll_CmpByTakeHomePay(const Payroll *a, const Payroll *b);
 */
+void Payroll_FillContent(Payroll *toFill);
+
 void Payroll_SortByID(FArray payrolls);
 void Payroll_SortByName(FArray payrolls);
 void Payroll_SortByBaseWage(FArray payrolls);

@@ -55,6 +55,47 @@ void Payroll_FreePayrolls(FArray payrolls)
     }
 }
 
+//填充Payroll中需要计算的内容(这个操作描述太长 不知道怎么翻译)
+void Payroll_FillContent(Payroll *toFill)
+{
+    //应发工资
+    toFill->salary = toFill->baseWage + toFill->dutyWage + toFill->bonus;
+    //应纳税所得额 = 应发工资 - 医疗保险 - 养老保险 - 失业保险 - 公积金
+    float taxToCount = toFill->salary -
+        toFill->healthInsurance -
+        toFill->endowmentInsurance -
+        toFill->unemploymentInsurance -
+        toFill->providentFund;
+    float totalTax = 0;
+    //税收阶梯数组
+    float taxPeakList[8] = {0,3500,5000,8000,12500,38500,58500,83500};
+    float taxRateList[8] = {0,0.03,0.1,0.2,0.25,0.3,0.35,0.45};
+    int i;
+    if(taxToCount > taxPeakList[7])
+    {
+        totalTax += (taxToCount - taxPeakList[7]) * taxRateList[7];
+        taxToCount = taxPeakList[7];
+    }
+    for(i = 6;i>=0;i--)
+    {
+        //从后往前遍历
+        if(taxToCount>taxPeakList[i] && taxToCount <= taxPeakList[i+1])
+        {
+            totalTax += (taxToCount - taxPeakList[i]) * taxRateList[i];
+            taxToCount = taxPeakList[i];
+        }
+    }
+    //个税额
+    toFill->incomeTax = totalTax;
+    //实发工资 = 应发工资 - 医疗保险 - 养老保险 - 失业保险 - 公积金 - 个人所得税
+    toFill->takeHomePay = toFill->salary -
+        toFill->healthInsurance -
+        toFill->endowmentInsurance -
+        toFill->unemploymentInsurance -
+        toFill->providentFund -
+        toFill->incomeTax;
+}
+
 /*一系列必要的比较函数*/
 /*因为一共有十二项数据,编写和除错工作量巨大,所以仅对四项数据处理*/
 int floatCmp(float a, float b)
