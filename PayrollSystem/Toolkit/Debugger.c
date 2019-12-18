@@ -47,7 +47,7 @@ void PrintCurrentTime()
     printf("%02d:%02d:%02d",t->tm_hour,t->tm_min,t->tm_sec);
 }
 
-void PrintLog(char *log)
+void PrintLog(const char *log)
 {
     SetColor(WHITE,BLACK);
     PrintCurrentTime();
@@ -57,11 +57,24 @@ void PrintLog(char *log)
         putchar(*log);
         log++;
     }
-    if(*(log-1)!='\n')
-    {
-        putchar('\n');
-    }
     SetColor(WHITE,BLACK);
+}
+
+//打印带int参数的Log
+void PrintLogWithInt(const char *formatter,const int a)
+{
+    SetColor(WHITE,BLACK);
+    PrintCurrentTime();
+    printf("[Log] ");
+    printf(formatter,&a);
+}
+
+void PrintLogWithString(const char *formatter,char *s)
+{
+    SetColor(WHITE,BLACK);
+    PrintCurrentTime();
+    printf("[Log] ");
+    printf(formatter,s);
 }
 
 void PrintWarning(char *warning)
@@ -74,10 +87,26 @@ void PrintWarning(char *warning)
         putchar(*warning);
         warning++;
     }
-    if(*(warning-1)!='\n')
-    {
-        putchar('\n');
-    }
+    SetColor(WHITE,BLACK);
+}
+
+//打印带Int的Warning
+void PrintWarningWithInt(const char *formatter,int a)
+{
+    SetColor(LIGHTYELLOW,BLACK);
+    PrintCurrentTime();
+    printf("[Warning] ");
+    printf(formatter,&a);
+    SetColor(WHITE,BLACK);
+}
+
+//打印带String的Warning
+void PrintWarningWithString(const char *formatter,char *s)
+{
+    SetColor(LIGHTYELLOW,BLACK);
+    PrintCurrentTime();
+    printf("[Warning] ");
+    printf(formatter,s);
     SetColor(WHITE,BLACK);
 }
 
@@ -91,11 +120,26 @@ void PrintError(char *error)
         putchar(*error);
         error++;
     }
-    if(*(error-1)!='\n')
-    {
-        putchar('\n');
-    }
     SetColor(WHITE,BLACK);
 }
 
+//打印带Int参数的Error
+void PrintErrorWithInt(const char *formatter,int a)
+{
+    SetColor(LIGHTRED,BLACK);
+    PrintCurrentTime();
+    printf("[Error] ");
+    printf(formatter,&a);
+    SetColor(WHITE,BLACK);
+}
+
+//打印带String参数的Error
+void PrintErrorWithString(const char *formatter,char *s)
+{
+    SetColor(LIGHTRED,BLACK);
+    PrintCurrentTime();
+    printf("[Error] ");
+    printf(formatter,s);
+    SetColor(WHITE,BLACK);
+}
 #endif // _DEBUGGER_
