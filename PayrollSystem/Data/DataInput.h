@@ -3,6 +3,7 @@
 #include "Payroll.h"
 #include "../Toolkit/FlexibleArray.h"
 
+int GetPayrolls(FArray* payrolls);
 void ResetInputFunction(void (*InputFunction)(FArray*));
 void HardInput(FArray* payrolls);
 void UserInput(FArray* payrolls);

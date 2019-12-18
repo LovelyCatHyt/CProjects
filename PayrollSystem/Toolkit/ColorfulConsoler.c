@@ -11,6 +11,14 @@ COORD SHORT2COORD(SHORT x,SHORT y)
     return result;
 }
 
+COORD GetCurrentCursor()
+{
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
+    GetConsoleScreenBufferInfo(hStdOut,&csbiInfo);
+    return csbiInfo.dwCursorPosition;
+}
+
 /*设置一片区域的Attr*/
 void SetRectAttr(COORD beginPos,COORD endPos,WORD attr)
 {

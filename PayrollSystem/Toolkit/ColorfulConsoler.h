@@ -25,5 +25,6 @@ void SetRectAttr(COORD beginPos,COORD endPos,WORD attr);
 void SetRectChar(COORD beginPos,COORD endPos,WCHAR c);
 void DefaultColor();
 COORD SHORT2COORD(SHORT x,SHORT y);
+COORD GetCurrentCursor();
 
 #endif // _COLORFULCONSOLER_H_

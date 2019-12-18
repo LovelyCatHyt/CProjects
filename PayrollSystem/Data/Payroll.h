@@ -35,7 +35,6 @@ void Payroll_Initialize(
     float takeHomePay
 );
 
-int GetPayrolls(FArray* payrolls);
 void Payroll_FreeFArray(Payroll pr);
 void Payroll_FreePayrolls(FArray payrolls);
 /*
