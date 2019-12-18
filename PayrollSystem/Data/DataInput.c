@@ -30,13 +30,6 @@ int PreProcessPayrolls(FArray *payrolls)
         PrintError("Payrolls = NULL!");
         return 0;
     }
-    if(payrolls->arraySize>0)
-    {
-        /*释放FArray中的内容*/
-        FArray_Free(payrolls);
-    }
-    //初始化
-    FArray_Initialize(payrolls,sizeof(Payroll),0);
     return 1;
 }
 
