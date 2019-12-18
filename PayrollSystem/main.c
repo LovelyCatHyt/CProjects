@@ -17,16 +17,16 @@ static MenuNode mainMenu[] =
     {EditData,"编辑数据",TRUE,NULL,0},
     {NULL,"数据排序>",TRUE,(MenuNode [])
     {
-        {SortByID,"以ID排序",FALSE,NULL,0},
-        {SortByName,"以姓名排序",FALSE,NULL,0},
-        {SortByBaseWage,"以基本工资排序",FALSE,NULL,0},
-        {SortByTakeHomePay,"以实付工资排序",FALSE,NULL,0}
+        {SortByID,"ID排序",FALSE,NULL,0},
+        {SortByName,"姓名排序",FALSE,NULL,0},
+        {SortByBaseWage,"基本工资排序",FALSE,NULL,0},
+        {SortByTakeHomePay,"实发工资排序",FALSE,NULL,0}
     },4},
     {RemoveData,"删除数据",TRUE,NULL,0},
     {ExitSystem,"退出系统",TRUE,NULL,0}
 };
 
-//一个模块的结束
+//一个模块的结束,包括打印最新工资表和显示主菜单
 void EndOfModule()
 {
     void (*action)(void) = NULL;
@@ -180,22 +180,34 @@ void ExitSystem()
 //按ID排序
 void SortByID()
 {
-
+    PrintLog("【排序功能】- 按ID排序");
+    //排序
+    Payroll_SortByID(payrollList);
+    EndOfModule();
 }
 //按姓名排序
 void SortByName()
 {
-
+    PrintLog("【排序功能】- 按姓名排序");
+    //排序
+    Payroll_SortByName(payrollList);
+    EndOfModule();
 }
 //按基本工资排序
 void SortByBaseWage()
 {
-
+    PrintLog("【排序功能】- 按基本工资排序");
+    //排序
+    Payroll_SortByBaseWage(payrollList);
+    EndOfModule();
 }
-//按实付工资排序
+//按实发工资排序
 void SortByTakeHomePay()
 {
-
+    PrintLog("【排序功能】- 按实发工资排序");
+    //排序
+    Payroll_SortByTakeHomePay(payrollList);
+    EndOfModule();
 }
 
 int main()
