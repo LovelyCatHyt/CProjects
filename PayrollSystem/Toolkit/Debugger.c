@@ -10,6 +10,7 @@
 #include "KeyCtrl.h"
 #include "FlexibleArray.h"
 #include "../Data/Payroll.h"
+#include "../Data/DataInput.h"
 
 int CmpInt(void * a, void *b)
 {
@@ -21,60 +22,20 @@ int CmpInt(void * a, void *b)
 
 void Test()
 {
-    /*
-    MenuNode testMenu[2] = {
-                        {NULL,"Root0",NULL,
-                            (MenuNode []){
-                                {
-                                    PrintSomething,
-                                    "PrintSomething",
-                                    NULL,
-                                    NULL,
-                                    0
-                                },
-                                {
-                                    PrintSomething,
-                                    "AlsoPrintSth",
-                                    NULL,
-                                    NULL,
-                                    0
-                                }
-                            }
-                        ,2},
-                        {NULL,"Root1",NULL,NULL,0}
-    };
-    void (*action)(void) = ShowMenu(SHORT2COORD(0,0),testMenu,2);
-    if(action == NULL)
+    FArray payrolls;
+    FArray_Initialize(&payrolls,sizeof(Payroll),0);
+    GetPayrolls(&payrolls);
+    Payroll newpr;
+    Payroll_Initialize(&newpr,"CSU200508","é—®é¢˜åœ¨è¿™å„¿",3000,900,5000,50,100,20,560,0,0,0);
+    Payroll_FillContent(&newpr);
+    if(Payroll_IDExistInFArray(payrolls,newpr))
     {
-        printf("MenuExited.");
+        PrintError("This ID already exist!");
     }else
     {
-        action();
+        FArray_Add(&payrolls,(void *)&newpr);
     }
-    */
-    FArray a;
-    int i;
-    FArray_Initialize(&a,sizeof(int),3);
-    for(i = 0;i<3;i++)
-    {
-        ((int *)a.array)[i] = i;
-    }
-    for(int i = 0;i<3;i++)
-    {
-        printf("a.array[%d] = %d\n",i,((int *)a.array)[i]);
-    }
-    FArray_RemoveAt(&a,1);
-    printf("Remove at 1.\n");
-    for(int i = 0;i<2;i++)
-    {
-        printf("a.array[%d] = %d\n",i,((int *)a.array)[i]);
-    }
-    int temp = 2;
-    printf("Searching %d, it's index is: %d\n",temp,FArray_Search(a,&temp));
-    Payroll pr;
-    Payroll_Initialize(&pr,"CSU200501","ÕÅÈý",3000,900,5000,50,100,20,560,0,0,0);
-    Payroll_FillContent(&pr);
-    PrintPayroll(pr,WHITE,BLACK);
+    PrintPayrollTable((Payroll*)payrolls.array,payrolls.arraySize);
     system("Pause");
 }
 

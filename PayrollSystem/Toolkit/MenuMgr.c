@@ -129,14 +129,18 @@ void (*ShowMenu(COORD cdBeginPos, MenuNode *contents, size_t arraySize))(void)
             //向左
         case keycode_Escape:
             //退出
-            //清除菜单内容
-            SetRectChar(cdBeginPos,SHORT2COORD(cdBeginPos.X + maxWidth - 1,cdBeginPos.Y + arraySize - 1),' ');
-            //清除菜单颜色
-            SetRectAttr(cdBeginPos,SHORT2COORD(cdBeginPos.X + maxWidth - 1,cdBeginPos.Y + arraySize - 1),defaultAttr);
-            //返回到初始坐标
-            SetPos(cdBeginPos);
-            //禁用循环以结束当前菜单
-            canLoop = FALSE;
+            if(!contents[sSelectingMenuID].isRoot)
+            {
+                //不是根菜单
+                //清除菜单内容
+                SetRectChar(cdBeginPos,SHORT2COORD(cdBeginPos.X + maxWidth - 1,cdBeginPos.Y + arraySize - 1),' ');
+                //清除菜单颜色
+                SetRectAttr(cdBeginPos,SHORT2COORD(cdBeginPos.X + maxWidth - 1,cdBeginPos.Y + arraySize - 1),defaultAttr);
+                //返回到初始坐标
+                SetPos(cdBeginPos);
+                //禁用循环以结束当前菜单
+                canLoop = FALSE;
+            }
             break;
         }
     }

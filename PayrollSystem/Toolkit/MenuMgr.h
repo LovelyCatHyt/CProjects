@@ -7,7 +7,8 @@ typedef struct _MenuNode
 {
     void (*action)(void);
     char lable[MAX_MENU_LABLE];
-    struct _MenuNode *parent;
+    //struct _MenuNode *parent;
+    int isRoot;
     struct _MenuNode *childs;
     size_t childNum;
 

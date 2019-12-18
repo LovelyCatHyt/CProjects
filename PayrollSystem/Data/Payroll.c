@@ -23,10 +23,10 @@ void Payroll_Initialize(
     float takeHomePay)
 {
 
-    FArray_Initialize(&pr->ID,sizeof(char),strlen(ID));
-    memcpy(pr->ID.array,ID,strlen(ID));
-    FArray_Initialize(&pr->name,sizeof(char),strlen(name));
-    memcpy(pr->name.array,name,strlen(name));
+    FArray_Initialize(&pr->ID,sizeof(char),strlen(ID)+1);
+    memcpy(pr->ID.array,ID,strlen(ID)+1);
+    FArray_Initialize(&pr->name,sizeof(char),strlen(name)+1);
+    memcpy(pr->name.array,name,strlen(name)+1);
 
     pr->baseWage = baseWage;
     pr->dutyWage = dutyWage;
@@ -55,19 +55,35 @@ void Payroll_FreePayrolls(FArray payrolls)
     }
 }
 
-//Ìî³äPayrollÖĞĞèÒª¼ÆËãµÄÄÚÈİ(Õâ¸ö²Ù×÷ÃèÊöÌ«³¤ ²»ÖªµÀÔõÃ´·­Òë)
+//æ£€æŸ¥æ˜¯å¦å‡ å€ç›¸åŒID
+//ä¸“ä¸ºSearchByConditionå‡½æ•°è®¾è®¡çš„å‡½æ•°,æ‰€ä»¥å‚æ•°æ˜¯void *
+int Payroll_HasSameID(void * a, void * b)
+{
+    Payroll prA = *((Payroll *)a);
+    Payroll prB = *((Payroll *)b);
+    //IDç”¨strcmpè¿”å›0è¯´æ˜ç›¸åŒ
+    return strcmp((char *)prA.ID.array,(char *)prB.ID.array) == 0;
+}
+
+//åœ¨æ•°ç»„ä¸­æœ‰é‡å¤IDçš„Payroll
+int Payroll_IDExistInFArray(FArray prArray, Payroll toSeach)
+{
+    return FArray_SearchByCondition(prArray,(void *)&toSeach,Payroll_HasSameID) != -1;
+}
+
+//å¡«å……Payrollä¸­éœ€è¦è®¡ç®—çš„å†…å®¹(è¿™ä¸ªæ“ä½œæè¿°å¤ªé•¿ ä¸çŸ¥é“æ€ä¹ˆç¿»è¯‘)
 void Payroll_FillContent(Payroll *toFill)
 {
-    //Ó¦·¢¹¤×Ê
+    //åº”å‘å·¥èµ„
     toFill->salary = toFill->baseWage + toFill->dutyWage + toFill->bonus;
-    //Ó¦ÄÉË°ËùµÃ¶î = Ó¦·¢¹¤×Ê - Ò½ÁÆ±£ÏÕ - ÑøÀÏ±£ÏÕ - Ê§Òµ±£ÏÕ - ¹«»ı½ğ
+    //åº”çº³ç¨æ‰€å¾—é¢ = åº”å‘å·¥èµ„ - åŒ»ç–—ä¿é™© - å…»è€ä¿é™© - å¤±ä¸šä¿é™© - å…¬ç§¯é‡‘
     float taxToCount = toFill->salary -
         toFill->healthInsurance -
         toFill->endowmentInsurance -
         toFill->unemploymentInsurance -
         toFill->providentFund;
     float totalTax = 0;
-    //Ë°ÊÕ½×ÌİÊı×é
+    //ç¨æ”¶é˜¶æ¢¯æ•°ç»„
     float taxPeakList[8] = {0,3500,5000,8000,12500,38500,58500,83500};
     float taxRateList[8] = {0,0.03,0.1,0.2,0.25,0.3,0.35,0.45};
     int i;
@@ -78,16 +94,16 @@ void Payroll_FillContent(Payroll *toFill)
     }
     for(i = 6;i>=0;i--)
     {
-        //´ÓºóÍùÇ°±éÀú
+        //ä»åå¾€å‰éå†
         if(taxToCount>taxPeakList[i] && taxToCount <= taxPeakList[i+1])
         {
             totalTax += (taxToCount - taxPeakList[i]) * taxRateList[i];
             taxToCount = taxPeakList[i];
         }
     }
-    //¸öË°¶î
+    //ä¸ªç¨é¢
     toFill->incomeTax = totalTax;
-    //Êµ·¢¹¤×Ê = Ó¦·¢¹¤×Ê - Ò½ÁÆ±£ÏÕ - ÑøÀÏ±£ÏÕ - Ê§Òµ±£ÏÕ - ¹«»ı½ğ - ¸öÈËËùµÃË°
+    //å®å‘å·¥èµ„ = åº”å‘å·¥èµ„ - åŒ»ç–—ä¿é™© - å…»è€ä¿é™© - å¤±ä¸šä¿é™© - å…¬ç§¯é‡‘ - ä¸ªäººæ‰€å¾—ç¨
     toFill->takeHomePay = toFill->salary -
         toFill->healthInsurance -
         toFill->endowmentInsurance -
@@ -96,8 +112,8 @@ void Payroll_FillContent(Payroll *toFill)
         toFill->incomeTax;
 }
 
-/*Ò»ÏµÁĞ±ØÒªµÄ±È½Ïº¯Êı*/
-/*ÒòÎªÒ»¹²ÓĞÊ®¶şÏîÊı¾İ,±àĞ´ºÍ³ı´í¹¤×÷Á¿¾Ş´ó,ËùÒÔ½ö¶ÔËÄÏîÊı¾İ´¦Àí*/
+/*ä¸€ç³»åˆ—å¿…è¦çš„æ¯”è¾ƒå‡½æ•°*/
+/*å› ä¸ºä¸€å…±æœ‰åäºŒé¡¹æ•°æ®,ç¼–å†™å’Œé™¤é”™å·¥ä½œé‡å·¨å¤§,æ‰€ä»¥ä»…å¯¹å››é¡¹æ•°æ®å¤„ç†*/
 int floatCmp(float a, float b)
 {
     float tmp = a-b;
@@ -122,7 +138,7 @@ int Payroll_CmpByTakeHomePay(const void *a, const void *b)
     return floatCmp(((Payroll *)a)->takeHomePay,((Payroll *)b)->takeHomePay);
 }
 
-/*Ò»ÏµÁĞÅÅĞòº¯Êı*/
+/*ä¸€ç³»åˆ—æ’åºå‡½æ•°*/
 void Payroll_SortByID(FArray payrolls)
 {
     qsort((Payroll *)payrolls.array,payrolls.arraySize,payrolls.unitSize,Payroll_CmpByID);
@@ -143,14 +159,14 @@ void Payroll_SortByTakeHomePay(FArray payrolls)
 void PrintTableTop(unsigned int foreColor,unsigned int backgroundColor)
 {
     SetColor(foreColor,backgroundColor);
-    printf("Ö°¹¤±àºÅ  ĞÕÃû   »ù±¾¹¤×Ê Ö°Îñ¹¤×Ê ½òÌù     Ò½ÁÆ±£ÏÕ ÑøÀÏ±£ÏÕ Ê§Òµ±£ÏÕ ¹«»ı½ğ   Ó¦·¢¹¤×Ê ¸öÈËË°   Êµ·¢¹¤×Ê\n");
+    printf("èŒå·¥ç¼–å·  å§“å     åŸºæœ¬å·¥èµ„ èŒåŠ¡å·¥èµ„ æ´¥è´´     åŒ»ç–—ä¿é™© å…»è€ä¿é™© å¤±ä¸šä¿é™© å…¬ç§¯é‡‘   åº”å‘å·¥èµ„ ä¸ªäººç¨   å®å‘å·¥èµ„\n");
     SetColor(WHITE,BLACK);
 }
 
 void PrintPayroll(Payroll pr,unsigned int foreColor,unsigned int backgroundColor)
 {
     SetColor(foreColor,backgroundColor);
-    printf("%-9s %-6s %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f\n",
+    printf("%-9s %-8s %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f\n",
            (char *)pr.ID.array,
            (char *)pr.name.array,
            pr.baseWage,

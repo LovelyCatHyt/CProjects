@@ -7,22 +7,22 @@
 #include "../Toolkit/Debugger.h"
 #include "../Toolkit/FlexibleArray.h"
 
-extern void (*DataInput)(FArray*);
+void (*DataInput)(FArray*) = HardInput;
 
-/*»ñÈ¡¹¤×ÊÊı¾İ±í*/
+/*è·å–å·¥èµ„æ•°æ®è¡¨*/
 int GetPayrolls(FArray* payrolls)
 {
     DataInput(payrolls);
     return 1;
 }
 
-/*ÖØÖÃÊı¾İÊäÈëº¯Êı*/
+/*é‡ç½®æ•°æ®è¾“å…¥å‡½æ•°*/
 void ResetInputFunction(void (*InputFunction)(FArray*))
 {
     DataInput = InputFunction;
 }
 
-/*ËùÓĞÊäÈë·½·¨¶¼ĞèÒªÏÈ´¦Àípayrolls,Òò´Ë¶ÀÁ¢³öÒ»¸öº¯Êı*/
+/*æ‰€æœ‰è¾“å…¥æ–¹æ³•éƒ½éœ€è¦å…ˆå¤„ç†payrolls,å› æ­¤ç‹¬ç«‹å‡ºä¸€ä¸ªå‡½æ•°*/
 int PreProcessPayrolls(FArray *payrolls)
 {
     if(payrolls == NULL)
@@ -32,15 +32,15 @@ int PreProcessPayrolls(FArray *payrolls)
     }
     if(payrolls->arraySize>0)
     {
-        /*ÊÍ·ÅFArrayÖĞµÄÄÚÈİ*/
+        /*é‡Šæ”¾FArrayä¸­çš„å†…å®¹*/
         FArray_Free(payrolls);
     }
-    //³õÊ¼»¯
+    //åˆå§‹åŒ–
     FArray_Initialize(payrolls,sizeof(Payroll),0);
     return 1;
 }
 
-/*Ö±½ÓÉú³ÉÊı¾İ*/
+/*ç›´æ¥ç”Ÿæˆæ•°æ®*/
 void HardInput(FArray* payrolls)
 {
     if(!PreProcessPayrolls(payrolls))
@@ -49,24 +49,24 @@ void HardInput(FArray* payrolls)
     }
     Payroll *newPayroll;
     newPayroll = (Payroll *)malloc(sizeof(Payroll));
-    Payroll_Initialize(newPayroll,"CSU200501","ÕÅÈı",3000,900,5000,50,100,20,560,8900,525,8375);
+    Payroll_Initialize(newPayroll,"CSU200501","å¼ ä¸‰",3000,900,5000,50,100,20,560,8900,525,8375);
     FArray_Add(payrolls,newPayroll);
     newPayroll = (Payroll *)malloc(sizeof(Payroll));
-    Payroll_Initialize(newPayroll,"CSU200612","ÀîËÄ",2800,600,4000,45,80,19,550,7400,285,7115);
+    Payroll_Initialize(newPayroll,"CSU200612","æå››",2800,600,4000,45,80,19,550,7400,285,7115);
     FArray_Add(payrolls,newPayroll);
     newPayroll = (Payroll *)malloc(sizeof(Payroll));
-    Payroll_Initialize(newPayroll,"CSU201208","ÍõÎå",3200,1000,5600,55,110,22,580,9800,705,9095);
+    Payroll_Initialize(newPayroll,"CSU201208","ç‹äº”",3200,1000,5600,55,110,22,580,9800,705,9095);
     FArray_Add(payrolls,newPayroll);
     newPayroll = (Payroll *)malloc(sizeof(Payroll));
-    Payroll_Initialize(newPayroll,"CSU201608","ÕÔÁù",2900,800,4800,48,100,21,560,8500,445,8055);
+    Payroll_Initialize(newPayroll,"CSU201608","èµµå…­",2900,800,4800,48,100,21,560,8500,445,8055);
     FArray_Add(payrolls,newPayroll);
     newPayroll = (Payroll *)malloc(sizeof(Payroll));
-    Payroll_Initialize(newPayroll,"CSU201698","³ÂÆß",3100,900,5200,52,110,22,570,9200,585,8615);
+    Payroll_Initialize(newPayroll,"CSU201698","é™ˆä¸ƒ",3100,900,5200,52,110,22,570,9200,585,8615);
     FArray_Add(payrolls,newPayroll);
 
     //TODO
 }
-/*ÓÉÓÃ»§ÊäÈëÊı¾İ*/
+/*ç”±ç”¨æˆ·è¾“å…¥æ•°æ®*/
 void UserInput(FArray* payrolls)
 {
     if(!PreProcessPayrolls(payrolls))
