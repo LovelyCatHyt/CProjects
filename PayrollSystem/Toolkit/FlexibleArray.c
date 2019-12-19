@@ -7,11 +7,10 @@
 
 int FArray_Initialize(FArray *a , int unitSize, int arraySize)
 {
-    a->arraySize = 0;
-    a->array = calloc(unitSize, arraySize);
-    a->unitSize = unitSize;
     a->arraySize = arraySize;
-    return a!=NULL?1:0;
+    a->unitSize = unitSize;
+    a->array = calloc(unitSize, arraySize);
+    return (a->array!=NULL)? 1 : 0;
 }
 
 void FArray_Free(FArray *a)
@@ -43,6 +42,28 @@ void FArray_RemoveAt(FArray *a, int index)
         PrintError("执行Remove操作时 index 下标越界!");
     }
 
+}
+
+int FArray_CopyMemory(FArray *a, void *src, int byte)
+{
+    if(byte % a->unitSize!=0)
+    {
+        //如果byte不是unitSize的整倍数
+        return 0;
+    }
+    //先清除数据
+    FArray_Free(a);
+    //再重置之
+    if(FArray_Initialize(a,a->unitSize, byte / a->unitSize))
+    {
+        memcpy(a->array,src,byte);
+
+    }else
+    {
+        PrintError("Can't copy memory!");
+    }
+
+    return 1;
 }
 
 int CmpMemory(void *a, void *b,size_t memorySize)

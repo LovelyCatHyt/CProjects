@@ -1,3 +1,5 @@
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
@@ -7,8 +9,11 @@
 #include "../Toolkit/Debugger.h"
 #include "../Toolkit/FlexibleArray.h"
 
+#ifdef USERINPUT
 void (*DataInput)(FArray*) = UserInput;
-
+#else
+void (*DataInput)(FArray*) = HardInput;
+#endif
 /*获取工资数据表*/
 int GetPayrolls(FArray* payrolls)
 {
@@ -51,18 +56,23 @@ void HardInput(FArray* payrolls)
     newPayroll = (Payroll *)malloc(sizeof(Payroll));
     Payroll_Initialize(newPayroll,"CSU200501","张三",3000,900,5000,50,100,20,560,8900,525,8375);
     FArray_Add(payrolls,newPayroll);
+    free(newPayroll);
     newPayroll = (Payroll *)malloc(sizeof(Payroll));
     Payroll_Initialize(newPayroll,"CSU200612","李四",2800,600,4000,45,80,19,550,7400,285,7115);
     FArray_Add(payrolls,newPayroll);
+    free(newPayroll);
     newPayroll = (Payroll *)malloc(sizeof(Payroll));
     Payroll_Initialize(newPayroll,"CSU201208","王五",3200,1000,5600,55,110,22,580,9800,705,9095);
     FArray_Add(payrolls,newPayroll);
+    free(newPayroll);
     newPayroll = (Payroll *)malloc(sizeof(Payroll));
     Payroll_Initialize(newPayroll,"CSU201608","赵六",2900,800,4800,48,100,21,560,8500,445,8055);
     FArray_Add(payrolls,newPayroll);
+    free(newPayroll);
     newPayroll = (Payroll *)malloc(sizeof(Payroll));
     Payroll_Initialize(newPayroll,"CSU201698","陈七",3100,900,5200,52,110,22,570,9200,585,8615);
     FArray_Add(payrolls,newPayroll);
+    free(newPayroll);
 
     //TODO
 }

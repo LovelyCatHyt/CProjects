@@ -98,8 +98,9 @@ void EditData()
             inputAvailable = 0;
         }
     }while(!inputAvailable);
-    //设置当前编辑对象
+    //复制当前编辑缓冲对象
     toEdit = (Payroll *)payrollList.array + index;
+    Payroll_Initialize(&tempPayroll,(char *)toEdit->ID.array,(char *)toEdit->name.array,toEdit->baseWage,toEdit->dutyWage,toEdit->bonus,toEdit->healthInsurance,toEdit->endowmentInsurance,toEdit->unemploymentInsurance,toEdit->providentFund,toEdit->salary,toEdit->incomeTax,toEdit->takeHomePay);
     PrintLog("请输入需要修改的项目编号:");
     printf("[0]编号\n"
         "[1]姓名\n"
@@ -127,52 +128,67 @@ void EditData()
         {
             inputAvailable = 1;
             PrintLog("请输入ID,输入完毕后按下回车:");
-            scanf("%s",tempID);
-            PrintLogWithString("你输入的ID是\"%s\"\n",tempID);
-            Payroll_Initialize(&tempPayroll,tempID,"",0,0,0,0,0,0,0,0,0,0);
+            scanf("%s",tempID);//TOFIX
+            FArray_CopyMemory(&tempPayroll.ID,tempID,strlen(tempID) + 1);
+            PrintLogWithString("你输入的ID是\"%s\"",(char *)tempPayroll.ID.array);
             if(Payroll_IDExistInFArray(payrollList,tempPayroll))
             {
                 PrintError("该编号已存在!");
                 inputAvailable = 0;
             }
         }while(!inputAvailable);
-        //录入ID
-        FArray_Free(&toEdit->ID);
-        FArray_Initialize(&toEdit->ID,sizeof(char),strlen(tempID)+1);
-        memcpy(toEdit->ID.array,tempID,strlen(tempID)+1);
         break;
     case 1:
         PrintLog("请输入姓名:");
         scanf("%s",tempName);
         PrintLogWithString("你输入的姓名是:%s",tempName);
         //录入姓名
-        FArray_Free(&toEdit->name);
-        FArray_Initialize(&toEdit->name,sizeof(char),strlen(tempName)+1);
-        memcpy(toEdit->name.array,tempName,strlen(tempName)+1);
+        FArray_CopyMemory(&tempPayroll.name,tempName,strlen(tempName) + 1);
         break;
     case 2:
-        InputFloat("请输入基本工资:",&toEdit->baseWage,"基本工资:%f\n");
+        InputFloat("请输入基本工资:",&tempPayroll.baseWage,"基本工资:%f\n");
         break;
     case 3:
-        InputFloat("请输入职务工资:",&toEdit->dutyWage,"职务工资:%f\n");
+        InputFloat("请输入职务工资:",&tempPayroll.dutyWage,"职务工资:%f\n");
         break;
     case 4:
-        InputFloat("请输入津贴:",&toEdit->bonus,"津贴:%f\n");
+        InputFloat("请输入津贴:",&tempPayroll.bonus,"津贴:%f\n");
         break;
     case 5:
-        InputFloat("请输入养老保险:",&toEdit->endowmentInsurance,"养老保险:%f\n");
+        InputFloat("请输入养老保险:",&tempPayroll.endowmentInsurance,"养老保险:%f\n");
         break;
     case 6:
-        InputFloat("请输入失业保险:",&toEdit->unemploymentInsurance,"失业保险:%f\n");
+        InputFloat("请输入失业保险:",&tempPayroll.unemploymentInsurance,"失业保险:%f\n");
         break;
     case 7:
-        InputFloat("请输入公积金:",&toEdit->providentFund,"公积金:%f\n");
+        InputFloat("请输入公积金:",&tempPayroll.providentFund,"公积金:%f\n");
         break;
     }
     //更新应发工资 个税 实付工资
-    Payroll_FillContent(toEdit);
+    Payroll_FillContent(&tempPayroll);
+    PrintLog("原信息:");
+    PrintPayrollTable((Payroll *)payrollList.array + index,1);
     PrintLog("修改后信息如下:");
-    PrintPayrollTable(toEdit,1);
+    PrintPayrollTable(&tempPayroll,1);
+    PrintWarning("是否保存编辑的信息?按回车键确认,按Esc取消.");
+    do
+    {
+        inputAvailable = 1;
+        switch (getch())
+        {
+        case 13:
+            //保存数据
+            *((Payroll *)payrollList.array + index) = tempPayroll;
+            break;
+        case 27:
+            //退出
+            inputAvailable = 1;
+            break;
+        default:
+            inputAvailable = 0;
+            break;
+        }
+    }while(!inputAvailable);
     EndOfModule();
 }
 //删除数据
@@ -206,7 +222,7 @@ void RemoveData()
     if(getch() == 13)
     {
         FArray_RemoveAt(&payrollList,index);
-        PrintLogWithInt("编号为%d的项已删除.",index);    
+        PrintLogWithInt("编号为%d的项已删除.",index);
     }
     PrintLog("删除功能退出.");
     EndOfModule();

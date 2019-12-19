@@ -14,6 +14,7 @@ void FArray_Free(FArray *a);
 
 void FArray_Add(FArray *a, void *element);
 void FArray_RemoveAt(FArray *a, int index);
+int FArray_CopyMemory(FArray *a, void *src, int byte);
 int FArray_SearchByCondition(FArray a, void *toSearch, int (*condition)(void * a, void * b));
 int FArray_Search(FArray a, void *toSearch);
 
