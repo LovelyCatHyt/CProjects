@@ -8,3 +8,9 @@ Test/
 *.layout
 *.cbp
 *.o
+*.pdf
+*.exe
+*.gch
+*.bmarks
+*.cscope_file_list
+PayrollSystem/.vscode/
