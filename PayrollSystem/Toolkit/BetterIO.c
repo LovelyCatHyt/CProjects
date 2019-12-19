@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <time.h>
+#include <conio.h>
 #include "BetterIO.h"
 
 

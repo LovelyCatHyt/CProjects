@@ -214,7 +214,6 @@ void RemoveData()
         }
     } while (!inputAvailable);
     //删除这一项数据
-    int sureToRemove = 0;
     PrintWarning("警告:此操作不可撤销!是否继续?若继续请按回车.");
     if (getch() == 13)
     {
@@ -303,7 +302,7 @@ void DoStatistic()
     SetColor(LIGHTWHITE, BLACK);
     printf("%d\n",lowIncome);
     SetColor(WHITE, BLACK);
-    printf("中等收入(5000~10000):",middleIncome);
+    printf("中等收入(5000~10000):");
     SetColor(LIGHTWHITE, BLACK);
     printf("%d\n", middleIncome);
     SetColor(WHITE, BLACK);

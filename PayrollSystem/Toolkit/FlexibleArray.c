@@ -104,7 +104,7 @@ int FArray_SearchByCondition(FArray a, void *toSearch, int (*condition)(void * a
 //搜索是否存在某个元素,存在则返回第一个匹配的元素索引,不存在则返回-1
 int FArray_Search(FArray a, void * toSearch)
 {
-    int i,j;
+    int i;
     int result = -1;
     for(i = 0;i<a.arraySize;i++)
     {
