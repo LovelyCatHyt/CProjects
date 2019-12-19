@@ -229,6 +229,7 @@ void DoStatistic()
 {
     system("cls");
     PrintLog("【统计功能】");
+    int lowIncome = 0, middleIncome = 0, highIncome = 0;
     Payroll maximums, minimums, averages;
     Payroll *list = (Payroll *)payrollList.array;
     int arraySize = payrollList.arraySize;
@@ -276,6 +277,13 @@ void DoStatistic()
         averages.salary += list[i].salary;
         averages.incomeTax += list[i].incomeTax;
         averages.takeHomePay += list[i].takeHomePay;
+        //统计不同工资层次的数量
+        if (list[i].takeHomePay < 5000)
+            lowIncome++;
+        if (list[i].takeHomePay >= 5000 && list[i].takeHomePay < 10000)
+            middleIncome++;
+        if(list[i].takeHomePay > 10000)
+            highIncome++;
     }
     //求平均(大括号是为了方便在编辑视图中收起来)
     {
@@ -290,9 +298,21 @@ void DoStatistic()
         averages.incomeTax /= arraySize;
         averages.takeHomePay /= arraySize;
     }
+    SetColor(WHITE, BLACK);
+    printf("低收入(少于5000):");
+    SetColor(LIGHTWHITE, BLACK);
+    printf("%d\n",lowIncome);
+    SetColor(WHITE, BLACK);
+    printf("中等收入(5000~10000):",middleIncome);
+    SetColor(LIGHTWHITE, BLACK);
+    printf("%d\n", middleIncome);
+    SetColor(WHITE, BLACK);
+    printf("高收入(10000以上):");
+    SetColor(LIGHTWHITE, BLACK);
+    printf("%d\n", highIncome);
     SetColor(AQUA, BLACK);
     printf("统计项目 基本工资 职务工资 津贴     医疗保险 养老保险 失业保险 公积金   应发工资 个人税   实发工资\n");
-    SetColor(LIGHTRED, GRAY);
+    SetColor(LIGHTRED, BLACK);
     printf("最大值   %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f\n",
            maximums.baseWage,
            maximums.dutyWage,
@@ -316,7 +336,7 @@ void DoStatistic()
            minimums.salary,
            minimums.incomeTax,
            minimums.takeHomePay);
-    SetColor(LIGHTWHITE, GRAY);
+    SetColor(LIGHTWHITE, BLACK);
     printf("平均值   %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f\n",
            averages.baseWage,
            averages.dutyWage,
