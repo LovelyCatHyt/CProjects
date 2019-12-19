@@ -1,4 +1,4 @@
-
+#define USERINPUT
 
 #include <stdio.h>
 #include <stdlib.h>
