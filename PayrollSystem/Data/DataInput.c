@@ -86,7 +86,7 @@ void UserInput(FArray* payrolls)
             dataAvailable = 1;
             PrintLog("请输入ID,输入完毕后按下回车:");
             scanf("%s",tempID);
-            printf("你输入的ID是\"%s\"\n",tempID);
+            PrintLogWithString("你输入的ID是\"%s\"\n",tempID);
             Payroll_Initialize(&tempPayroll,tempID,"",0,0,0,0,0,0,0,0,0,0);
             if(Payroll_IDExistInFArray(*payrolls,tempPayroll))
             {
@@ -97,15 +97,15 @@ void UserInput(FArray* payrolls)
         PrintLog("请输入姓名:");
         scanf("%s",tempName);
         Payroll_Initialize(&tempPayroll,tempID,tempName,0,0,0,0,0,0,0,0,0,0);
-        printf("你输入的姓名是\"%s\"\n",tempName);
+        PrintLogWithString("你输入的姓名是\"%s\"\n",tempName);
 
-        InputFloat("请输入基本工资:",&tempPayroll.baseWage,"基本工资:%f\n");
-        InputFloat("请输入职务工资:",&tempPayroll.dutyWage,"职务工资:%f\n");
-        InputFloat("请输入津贴:",&tempPayroll.bonus,"津贴:%f\n");
-        InputFloat("请输入医疗保险:",&tempPayroll.healthInsurance,"医疗保险:%f\n");
-        InputFloat("请输入养老保险:",&tempPayroll.endowmentInsurance,"养老保险:%f\n");
-        InputFloat("请输入失业保险:",&tempPayroll.unemploymentInsurance,"失业保险:%f\n");
-        InputFloat("请输入公积金:",&tempPayroll.providentFund,"公积金:%f\n");
+        InputFloat("请输入基本工资:",&tempPayroll.baseWage,"基本工资:%.2f\n");
+        InputFloat("请输入职务工资:",&tempPayroll.dutyWage,"职务工资:%.2f\n");
+        InputFloat("请输入津贴:",&tempPayroll.bonus,"津贴:%.2f\n");
+        InputFloat("请输入医疗保险:",&tempPayroll.healthInsurance,"医疗保险:%.2f\n");
+        InputFloat("请输入养老保险:",&tempPayroll.endowmentInsurance,"养老保险:%.2f\n");
+        InputFloat("请输入失业保险:",&tempPayroll.unemploymentInsurance,"失业保险:%.2f\n");
+        InputFloat("请输入公积金:",&tempPayroll.providentFund,"公积金:%.2f\n");
         //计算公积金
         Payroll_FillContent(&tempPayroll);
         PrintLog("您输入的工资信息如下:");

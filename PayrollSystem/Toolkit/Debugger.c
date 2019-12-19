@@ -49,6 +49,7 @@ void PrintCurrentTime()
 
 void PrintLog(const char *log)
 {
+    int addNewLine = log[strlen(log) - 1]!='\n';
     SetColor(WHITE,BLACK);
     PrintCurrentTime();
     printf("[Log] ");
@@ -57,28 +58,42 @@ void PrintLog(const char *log)
         putchar(*log);
         log++;
     }
-    SetColor(WHITE,BLACK);
+    if(addNewLine)
+    {
+        putchar('\n');
+    }
 }
 
 //打印带int参数的Log
 void PrintLogWithInt(const char *formatter,const int a)
 {
+    int addNewLine = formatter[strlen(formatter) - 1]!='\n';
     SetColor(WHITE,BLACK);
     PrintCurrentTime();
     printf("[Log] ");
-    printf(formatter,&a);
+    printf(formatter,a);
+    if(addNewLine)
+    {
+        putchar('\n');
+    }
 }
 
 void PrintLogWithString(const char *formatter,char *s)
 {
+    int addNewLine = formatter[strlen(formatter) - 1]!='\n';
     SetColor(WHITE,BLACK);
     PrintCurrentTime();
     printf("[Log] ");
     printf(formatter,s);
+    if(addNewLine)
+    {
+        putchar('\n');
+    }
 }
 
 void PrintWarning(char *warning)
 {
+    int addNewLine = warning[strlen(warning) - 1]!='\n';
     SetColor(LIGHTYELLOW,BLACK);
     PrintCurrentTime();
     printf("[Warning] ");
@@ -87,31 +102,46 @@ void PrintWarning(char *warning)
         putchar(*warning);
         warning++;
     }
+    if(addNewLine)
+    {
+        putchar('\n');
+    }
     SetColor(WHITE,BLACK);
 }
 
 //打印带Int的Warning
 void PrintWarningWithInt(const char *formatter,int a)
 {
+    int addNewLine = formatter[strlen(formatter) - 1]!='\n';
     SetColor(LIGHTYELLOW,BLACK);
     PrintCurrentTime();
     printf("[Warning] ");
-    printf(formatter,&a);
+    printf(formatter,a);
+    if(addNewLine)
+    {
+        putchar('\n');
+    }
     SetColor(WHITE,BLACK);
 }
 
 //打印带String的Warning
 void PrintWarningWithString(const char *formatter,char *s)
 {
+    int addNewLine = formatter[strlen(formatter) - 1]!='\n';
     SetColor(LIGHTYELLOW,BLACK);
     PrintCurrentTime();
     printf("[Warning] ");
     printf(formatter,s);
+    if(addNewLine)
+    {
+        putchar('\n');
+    }
     SetColor(WHITE,BLACK);
 }
 
 void PrintError(char *error)
 {
+    int addNewLine = error[strlen(error) - 1]!='\n';
     SetColor(LIGHTRED,BLACK);
     PrintCurrentTime();
     printf("[Error] ");
@@ -120,26 +150,40 @@ void PrintError(char *error)
         putchar(*error);
         error++;
     }
+    if(addNewLine)
+    {
+        putchar('\n');
+    }
     SetColor(WHITE,BLACK);
 }
 
 //打印带Int参数的Error
 void PrintErrorWithInt(const char *formatter,int a)
 {
+    int addNewLine = formatter[strlen(formatter) - 1]!='\n';
     SetColor(LIGHTRED,BLACK);
     PrintCurrentTime();
     printf("[Error] ");
-    printf(formatter,&a);
+    printf(formatter,a);
+    if(addNewLine)
+    {
+        putchar('\n');
+    }
     SetColor(WHITE,BLACK);
 }
 
 //打印带String参数的Error
 void PrintErrorWithString(const char *formatter,char *s)
 {
+    int addNewLine = formatter[strlen(formatter) - 1]!='\n';
     SetColor(LIGHTRED,BLACK);
     PrintCurrentTime();
     printf("[Error] ");
     printf(formatter,s);
+    if(addNewLine)
+    {
+        putchar('\n');
+    }
     SetColor(WHITE,BLACK);
 }
 #endif // _DEBUGGER_

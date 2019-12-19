@@ -5,6 +5,8 @@ void EndOfModule();
 void InputData();
 void EditData();
 void RemoveData();
+void DoStatistic();
+void SearchData();
 void ExitSystem();
 void SortByID();
 void SortByName();

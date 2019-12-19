@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
 #include "main.h"
 #include "Toolkit/Debugger.h"
 #include "Toolkit/MenuMgr.h"
@@ -23,6 +24,8 @@ static MenuNode mainMenu[] =
         {SortByTakeHomePay,"实发工资排序",FALSE,NULL,0}
     },4},
     {RemoveData,"删除数据",TRUE,NULL,0},
+    {DoStatistic,"统计数据",TRUE,0},
+    {SearchData,"查询数据",TRUE,0},
     {ExitSystem,"退出系统",TRUE,NULL,0}
 };
 
@@ -45,6 +48,8 @@ void EndOfModule()
 //输入功能
 void InputData()
 {
+    system("cls");
+    PrintLog("【输入功能】");
     if(payrollList.array==NULL)
     {
         //如果为空则初始化
@@ -65,9 +70,10 @@ void EditData()
     char tempName[10];
     Payroll tempPayroll;
     Payroll *toEdit;
+    system("cls");
     PrintLog("【编辑功能】");
     PrintPayrollTable((Payroll *)(payrollList.array),payrollList.arraySize);
-    printf("请选择要编辑的信息的编号(从0开始),目前共 %d 条.输入负数则退出编辑系统",payrollList.arraySize);
+    PrintLogWithInt("请选择要编辑的信息的索引(从0开始),目前共 %d 条.输入负数则退出编辑系统",payrollList.arraySize);
     do
     {
         inputAvailable = 1;
@@ -77,18 +83,18 @@ void EditData()
             if(index>=0)
             {
                 //打印当前信息
-                printf("您选择了第%d条信息:",index);
+                PrintLogWithInt("您选择了索引为%d的信息:",index);
                 PrintPayrollTable(((Payroll *)(payrollList.array)) + index,1);
             }else
             {
                 //退出编辑功能
                 PrintLog("已退出编辑.");
-                ShowMenu(GetCurrentCursor(),mainMenu,4)();
+                EndOfModule();
                 return;
             }
         }else
         {
-            PrintError("不存在第%d条信息!");
+            PrintErrorWithInt("不存在编号为%d的信息!",index);
             inputAvailable = 0;
         }
     }while(!inputAvailable);
@@ -122,7 +128,7 @@ void EditData()
             inputAvailable = 1;
             PrintLog("请输入ID,输入完毕后按下回车:");
             scanf("%s",tempID);
-            printf("你输入的ID是\"%s\"\n",tempID);
+            PrintLogWithString("你输入的ID是\"%s\"\n",tempID);
             Payroll_Initialize(&tempPayroll,tempID,"",0,0,0,0,0,0,0,0,0,0);
             if(Payroll_IDExistInFArray(payrollList,tempPayroll))
             {
@@ -138,7 +144,7 @@ void EditData()
     case 1:
         PrintLog("请输入姓名:");
         scanf("%s",tempName);
-        printf("你输入的姓名是:%s",tempName);
+        PrintLogWithString("你输入的姓名是:%s",tempName);
         //录入姓名
         FArray_Free(&toEdit->name);
         FArray_Initialize(&toEdit->name,sizeof(char),strlen(tempName)+1);
@@ -163,6 +169,8 @@ void EditData()
         InputFloat("请输入公积金:",&toEdit->providentFund,"公积金:%f\n");
         break;
     }
+    //更新应发工资 个税 实付工资
+    Payroll_FillContent(toEdit);
     PrintLog("修改后信息如下:");
     PrintPayrollTable(toEdit,1);
     EndOfModule();
@@ -170,17 +178,242 @@ void EditData()
 //删除数据
 void RemoveData()
 {
-
+    int inputAvailable;
+    int index = -1;
+    system("cls");
+    PrintLog("【删除功能】\n");
+    PrintLog("当前工资表:");
+    PrintPayrollTable((Payroll *)payrollList.array,payrollList.arraySize);
+    PrintLogWithInt("请选择要删除的项的编号(从0开始),目前共%d项.输入负数则退出删除功能",payrollList.arraySize);
+    do
+    {
+        inputAvailable = 1;
+        scanf("%d",&index);
+        if(index>=payrollList.arraySize)
+        {
+            PrintErrorWithInt("错误编号!不存在编号为%d的项",index);
+            inputAvailable = 0;
+        }else if(index<0)
+        {
+            PrintLog("删除功能退出.");
+            EndOfModule();
+            return;
+        }
+    }while(!inputAvailable);
+    //删除这一项数据
+    int sureToRemove = 0;
+    PrintWarning("警告:此操作不可撤销!是否继续?若继续请按回车.");
+    if(getch() == 13)
+    {
+        FArray_RemoveAt(&payrollList,index);
+        PrintLogWithInt("编号为%d的项已删除.",index);    
+    }
+    PrintLog("删除功能退出.");
+    EndOfModule();
+}
+//统计数据
+void DoStatistic()
+{
+    system("cls");
+    PrintLog("【统计功能】");
+    Payroll maximums,minimums,averages;
+    Payroll *list = (Payroll *)payrollList.array;
+    int arraySize = payrollList.arraySize;
+    int i;
+    if(arraySize <= 0)
+    {
+        PrintError("无可用数据!无法进行统计.");
+        EndOfModule();
+        return;
+    }
+    minimums = maximums = list[0];
+    Payroll_Initialize(&averages," - ","平均值",0,0,0,0,0,0,0,0,0,0);
+    for(i = 0;i<arraySize;i++)
+    {
+        //求最大值
+        maximums.baseWage = list[i].baseWage>maximums.baseWage?list[i].baseWage:maximums.baseWage;
+        maximums.bonus = list[i].bonus>maximums.bonus?list[i].bonus:maximums.bonus;
+        maximums.dutyWage = list[i].dutyWage>maximums.dutyWage?list[i].dutyWage:maximums.dutyWage;
+        maximums.healthInsurance = list[i].healthInsurance>maximums.healthInsurance?list[i].healthInsurance:maximums.healthInsurance;
+        maximums.endowmentInsurance = list[i].endowmentInsurance>maximums.endowmentInsurance?list[i].endowmentInsurance:maximums.endowmentInsurance;
+        maximums.unemploymentInsurance = list[i].unemploymentInsurance>maximums.unemploymentInsurance?list[i].unemploymentInsurance:maximums.unemploymentInsurance;
+        maximums.providentFund = list[i].providentFund>maximums.providentFund?list[i].providentFund:maximums.providentFund;
+        maximums.salary = list[i].salary>maximums.salary?list[i].salary:maximums.salary;
+        maximums.incomeTax = list[i].incomeTax>maximums.incomeTax?list[i].incomeTax:maximums.incomeTax;
+        maximums.takeHomePay = list[i].takeHomePay>maximums.takeHomePay?list[i].takeHomePay:maximums.takeHomePay;
+        //求最小值
+        minimums.baseWage = list[i].baseWage<minimums.baseWage?list[i].baseWage:minimums.baseWage;
+        minimums.bonus = list[i].bonus<minimums.bonus?list[i].bonus:minimums.bonus;
+        minimums.dutyWage = list[i].dutyWage<minimums.dutyWage?list[i].dutyWage:minimums.dutyWage;
+        minimums.healthInsurance = list[i].healthInsurance<minimums.healthInsurance?list[i].healthInsurance:minimums.healthInsurance;
+        minimums.endowmentInsurance = list[i].endowmentInsurance<minimums.endowmentInsurance?list[i].endowmentInsurance:minimums.endowmentInsurance;
+        minimums.unemploymentInsurance = list[i].unemploymentInsurance<minimums.unemploymentInsurance?list[i].unemploymentInsurance:minimums.unemploymentInsurance;
+        minimums.providentFund = list[i].providentFund<minimums.providentFund?list[i].providentFund:minimums.providentFund;
+        minimums.salary = list[i].salary<minimums.salary?list[i].salary:minimums.salary;
+        minimums.incomeTax = list[i].incomeTax<minimums.incomeTax?list[i].incomeTax:minimums.incomeTax;
+        minimums.takeHomePay = list[i].takeHomePay<minimums.takeHomePay?list[i].takeHomePay:minimums.takeHomePay;
+        //求和
+        averages.baseWage += list[i].baseWage;
+        averages.dutyWage += list[i].dutyWage;
+        averages.bonus += list[i].bonus;
+        averages.endowmentInsurance += list[i].endowmentInsurance;
+        averages.healthInsurance += list[i].healthInsurance;
+        averages.providentFund += list[i].providentFund;
+        averages.unemploymentInsurance += list[i].unemploymentInsurance;
+        averages.salary += list[i].salary;
+        averages.incomeTax += list[i].incomeTax;
+        averages.takeHomePay += list[i].takeHomePay;
+    }
+    //求平均(大括号是为了方便在编辑视图中收起来)
+    {
+        averages.baseWage /= arraySize;
+        averages.dutyWage /= arraySize;
+        averages.bonus /= arraySize;
+        averages.endowmentInsurance /= arraySize;
+        averages.healthInsurance /= arraySize;
+        averages.providentFund /= arraySize;
+        averages.unemploymentInsurance /= arraySize;
+        averages.salary /= arraySize;
+        averages.incomeTax /= arraySize;
+        averages.takeHomePay /= arraySize;
+    }
+    SetColor(AQUA,BLACK);
+    printf("统计项目 基本工资 职务工资 津贴     医疗保险 养老保险 失业保险 公积金   应发工资 个人税   实发工资\n");
+    SetColor(LIGHTRED,GRAY);
+    printf("最大值   %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f\n",
+           maximums.baseWage,
+           maximums.dutyWage,
+           maximums.bonus,
+           maximums.healthInsurance,
+           maximums.endowmentInsurance,
+           maximums.unemploymentInsurance,
+           maximums.providentFund,
+           maximums.salary,
+           maximums.incomeTax,
+           maximums.takeHomePay);
+    SetColor(PALEGREEN,BLACK);
+    printf("最小值   %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f\n",
+           minimums.baseWage,
+           minimums.dutyWage,
+           minimums.bonus,
+           minimums.healthInsurance,
+           minimums.endowmentInsurance,
+           minimums.unemploymentInsurance,
+           minimums.providentFund,
+           minimums.salary,
+           minimums.incomeTax,
+           minimums.takeHomePay);
+    SetColor(LIGHTWHITE,GRAY);
+    printf("平均值   %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f\n",
+           averages.baseWage,
+           averages.dutyWage,
+           averages.bonus,
+           averages.healthInsurance,
+           averages.endowmentInsurance,
+           averages.unemploymentInsurance,
+           averages.providentFund,
+           averages.salary,
+           averages.incomeTax,
+           averages.takeHomePay);
+    SetColor(WHITE,BLACK);
+    EndOfModule();
+}
+//查询数据
+void SearchData()
+{
+    int inputAvailable;
+    int itemIndex;
+    char toSearchString[32];
+    float min,max;
+    Payroll *list = (Payroll *)payrollList.array;
+    int arraySize = payrollList.arraySize;
+    int i;
+    FArray foundList;
+    //TODO
+    system("cls");
+    PrintLog("【查询功能】(未完成)");
+    PrintLog("请选择要查询的项目:");
+    printf("[0]编号(ID)查询\n[1]姓名查询\n[2]实发工资区间查询\n");
+    do
+    {
+        inputAvailable = 1;
+        scanf("%d",&itemIndex);
+        if(itemIndex>2 || itemIndex<0)
+        {
+            PrintError("错误输入!请重新选择要查询的项目:");
+            inputAvailable = 0;
+        }
+    }while(!inputAvailable);
+    FArray_Initialize(&foundList,sizeof(Payroll),0);
+    switch(itemIndex)
+    {
+    case 0:
+        PrintLog("请输入要查询的编号:");
+        scanf("%s",toSearchString);
+        for(i= 0;i<arraySize;i++)
+        {
+            if(strcmp((char *)list[i].ID.array,toSearchString)==0)
+            {
+                //找到就在列表中添加上去
+                FArray_Add(&foundList,&list[i]);
+            }
+        }
+        break;
+    case 1:
+        PrintLog("请输入要查询的姓名:");
+        scanf("%s",toSearchString);
+        for(i= 0;i<arraySize;i++)
+        {
+            if(strcmp((char *)list[i].name.array,toSearchString)==0)
+            {
+                //找到就在列表中添加上去
+                FArray_Add(&foundList,&list[i]);
+            }
+        }
+        break;
+    case 2:
+        PrintLog("请输入要查询的实发工资下限:");
+        scanf("%f",&min);
+        PrintLog("请输入上限:");
+        scanf("%f",&max);
+        for(i = 0;i<arraySize;i++)
+        {
+            if(list[i].takeHomePay>=min && list[i].takeHomePay<=max)
+            {
+                //在列表中添加
+                FArray_Add(&foundList,&list[i]);
+            }
+        }
+        break;
+    }
+    if(foundList.arraySize==0)
+    {
+        PrintLog("无查询结果!");
+    }else
+    {
+        PrintLog("查询结果如下:");
+        PrintPayrollTable((Payroll *)foundList.array,foundList.arraySize);
+    }
+    //释放内存
+    FArray_Free(&foundList);
+    EndOfModule();
 }
 //退出系统
 void ExitSystem()
 {
-
+    system("cls");
+    PrintWarning("确定要退出吗? 按回车确定,否则继续.");
+    if(getch()==13)
+    {
+        PrintLog("感谢您的使用,期待下次再见!");
+        return;
+    }
+    EndOfModule();
 }
 //按ID排序
 void SortByID()
 {
-    PrintLog("【排序功能】- 按ID排序");
+    PrintLog("【排序功能】- 按ID排序\n");
     //排序
     Payroll_SortByID(payrollList);
     EndOfModule();
@@ -188,7 +421,7 @@ void SortByID()
 //按姓名排序
 void SortByName()
 {
-    PrintLog("【排序功能】- 按姓名排序");
+    PrintLog("【排序功能】- 按姓名排序\n");
     //排序
     Payroll_SortByName(payrollList);
     EndOfModule();
@@ -196,7 +429,7 @@ void SortByName()
 //按基本工资排序
 void SortByBaseWage()
 {
-    PrintLog("【排序功能】- 按基本工资排序");
+    PrintLog("【排序功能】- 按基本工资排序\n");
     //排序
     Payroll_SortByBaseWage(payrollList);
     EndOfModule();
@@ -204,7 +437,7 @@ void SortByBaseWage()
 //按实发工资排序
 void SortByTakeHomePay()
 {
-    PrintLog("【排序功能】- 按实发工资排序");
+    PrintLog("【排序功能】- 按实发工资排序\n");
     //排序
     Payroll_SortByTakeHomePay(payrollList);
     EndOfModule();
@@ -232,7 +465,7 @@ int main()
             menuAction();
         }else
         {
-            PrintError("ExitMenu with empty funtion pointer!");
+            PrintError("ExitMenu with empty funtion pointer!\n");
         }
     }
 #endif
