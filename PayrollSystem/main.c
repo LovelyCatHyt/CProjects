@@ -8,6 +8,7 @@
 #include "Toolkit/MenuMgr.h"
 #include "Data/DataInput.h"
 #include "Toolkit/ColorfulConsoler.h"
+#include "Toolkit/MsgBox.h"
 
 //全文件可见的工资表
 static FArray payrollList = {NULL, 0, 0};
@@ -166,25 +167,18 @@ void EditData()
     PrintPayrollTable((Payroll *)payrollList.array + index, 1);
     PrintLog("修改后信息如下:");
     PrintPayrollTable(&tempPayroll, 1);
-    PrintWarning("是否保存编辑的信息?按回车键确认,按Esc取消.");
-    do
+    PrintWarning("是否保存编辑的信息?");
+    if(ShowMsgBox(""))
     {
-        inputAvailable = 1;
-        switch (getch())
-        {
-        case 13:
-            //保存数据
-            *((Payroll *)payrollList.array + index) = tempPayroll;
-            break;
-        case 27:
-            //退出
-            inputAvailable = 1;
-            break;
-        default:
-            inputAvailable = 0;
-            break;
-        }
-    } while (!inputAvailable);
+        //释放原有的动态储存的数据
+        Payroll_FreeFArray(*toEdit);
+        //复制新的数据
+        *toEdit = tempPayroll;
+        PrintLog("数据已保存.");
+    }else
+    {
+        PrintLog("数据未保存.");
+    }
     EndOfModule();
 }
 //删除数据
@@ -214,8 +208,8 @@ void RemoveData()
         }
     } while (!inputAvailable);
     //删除这一项数据
-    PrintWarning("警告:此操作不可撤销!是否继续?若继续请按回车.");
-    if (getch() == 13)
+    PrintWarning("警告:此操作不可撤销!是否继续?");
+    if (ShowMsgBox(""))
     {
         FArray_RemoveAt(&payrollList, index);
         PrintLogWithInt("编号为%d的项已删除.", index);
@@ -435,8 +429,8 @@ void SearchData()
 void ExitSystem()
 {
     system("cls");
-    PrintWarning("确定要退出吗? 按回车确定,否则继续.");
-    if (getch() == 13)
+    PrintWarning("确定要退出吗?");
+    if (ShowMsgBox(""))
     {
         PrintLog("感谢您的使用,期待下次再见!");
         return;
@@ -479,8 +473,8 @@ void SortByTakeHomePay()
 int main()
 {
 #ifdef TESTING
-    int a[] = {0, 0, 0, 0, 0};
-    printf("sizeof(a) = %d", sizeof(a));
+    int testing = ShowMsgBox("测试测试");
+    printf("tesing = %d.\n",testing);
 #else // TESTING
     COORD cursor;
     void (*menuAction)(void) = NULL;
