@@ -17,7 +17,12 @@ static MenuNode mainMenu[] =
     {
         {InputData, "输入数据", TRUE, NULL, 0},
         {EditData, "编辑数据", TRUE, NULL, 0},
-        {NULL, "数据排序>", TRUE, (MenuNode[]){{SortByID, "ID排序", FALSE, NULL, 0}, {SortByName, "姓名排序", FALSE, NULL, 0}, {SortByBaseWage, "基本工资排序", FALSE, NULL, 0}, {SortByTakeHomePay, "实发工资排序", FALSE, NULL, 0}}, 4},
+        {NULL, "数据排序>", TRUE, (MenuNode[]){
+            {SortByID, "ID排序", FALSE, NULL, 0}, 
+            {SortByName, "姓名排序", FALSE, NULL, 0}, 
+            {SortByBaseWage, "基本工资排序", FALSE, NULL, 0},
+            {SortByTakeHomePay, "实发工资排序", FALSE, NULL, 0}
+        }, 4},
         {RemoveData, "删除数据", TRUE, NULL, 0},
         {DoStatistic, "统计数据", TRUE, 0},
         {SearchData, "查询数据", TRUE, 0},
@@ -355,9 +360,8 @@ void SearchData()
     int arraySize = payrollList.arraySize;
     int i;
     FArray foundList;
-    //TODO
     system("cls");
-    PrintLog("【查询功能】(未完成)");
+    PrintLog("【查询功能】");
     PrintLog("请选择要查询的项目:");
     printf("[0]编号(ID)查询\n[1]姓名查询\n[2]实发工资区间查询\n");
     do
@@ -440,6 +444,7 @@ void ExitSystem()
 //按ID排序
 void SortByID()
 {
+    system("cls");
     PrintLog("【排序功能】- 按ID排序\n");
     //排序
     Payroll_SortByID(payrollList);
@@ -448,6 +453,7 @@ void SortByID()
 //按姓名排序
 void SortByName()
 {
+    system("cls");
     PrintLog("【排序功能】- 按姓名排序\n");
     //排序
     Payroll_SortByName(payrollList);
@@ -456,6 +462,7 @@ void SortByName()
 //按基本工资排序
 void SortByBaseWage()
 {
+    system("cls");
     PrintLog("【排序功能】- 按基本工资排序\n");
     //排序
     Payroll_SortByBaseWage(payrollList);
@@ -464,6 +471,7 @@ void SortByBaseWage()
 //按实发工资排序
 void SortByTakeHomePay()
 {
+    system("cls");
     PrintLog("【排序功能】- 按实发工资排序\n");
     //排序
     Payroll_SortByTakeHomePay(payrollList);
