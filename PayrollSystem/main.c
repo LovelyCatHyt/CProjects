@@ -103,25 +103,15 @@ void EditData()
     //复制当前编辑缓冲对象
     toEdit = (Payroll *)payrollList.array + index;
     Payroll_Initialize(&tempPayroll, (char *)toEdit->ID.array, (char *)toEdit->name.array, toEdit->baseWage, toEdit->dutyWage, toEdit->bonus, toEdit->healthInsurance, toEdit->endowmentInsurance, toEdit->unemploymentInsurance, toEdit->providentFund, toEdit->salary, toEdit->incomeTax, toEdit->takeHomePay);
-    PrintLog("请输入需要修改的项目编号:");
-    printf("[0]编号\n"
-           "[1]姓名\n"
-           "[2]基本工资\n"
-           "[3]职务工资\n"
-           "[4]津贴\n"
-           "[5]养老保险\n"
-           "[6]失业保险\n"
-           "[7]公积金\n");
-    do
-    {
-        inputAvailable = 1;
-        scanf("%d", &column);
-        if (column < 0 || column > 7)
-        {
-            PrintError("编号错误!请重新输入.");
-            inputAvailable = 0;
-        }
-    } while (!inputAvailable);
+    PrintLog("请选择需要修改的项目:");
+    column = ShowSimpleMenu((char *[]){"编号",
+           "姓名",
+           "基本工资",
+           "职务工资",
+           "津贴",
+           "养老保险",
+           "失业保险",
+           "公积金"},8,GetCurrentCursor());
     switch (column)
     {
     case 0:
@@ -363,17 +353,11 @@ void SearchData()
     system("cls");
     PrintLog("【查询功能】");
     PrintLog("请选择要查询的项目:");
-    printf("[0]编号(ID)查询\n[1]姓名查询\n[2]实发工资区间查询\n");
-    do
-    {
-        inputAvailable = 1;
-        scanf("%d", &itemIndex);
-        if (itemIndex > 2 || itemIndex < 0)
-        {
-            PrintError("错误输入!请重新选择要查询的项目:");
-            inputAvailable = 0;
-        }
-    } while (!inputAvailable);
+    itemIndex = ShowSimpleMenu((char *[]){"编号(ID)查询",
+                                          "姓名查询",
+                                          "实发工资区间查询"},
+                               3, GetCurrentCursor());
+    //初始化搜索列表
     FArray_Initialize(&foundList, sizeof(Payroll), 0);
     switch (itemIndex)
     {
@@ -418,7 +402,7 @@ void SearchData()
     }
     if (foundList.arraySize == 0)
     {
-        PrintLog("无查询结果!");
+        PrintError("无查询结果!");
     }
     else
     {

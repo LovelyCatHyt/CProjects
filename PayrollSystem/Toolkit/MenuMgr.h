@@ -14,6 +14,8 @@ typedef struct _MenuNode
 
 }MenuNode;
 
+int ShowSimpleMenu(char *contents[], int size, COORD cdBeginPos);
+
 void (*ShowMenu(COORD cdBeginPos, MenuNode *contents, size_t arraySize))(void);
 
 #endif // _MENUMGR_H

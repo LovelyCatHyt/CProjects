@@ -6,44 +6,120 @@
 #include "KeyCtrl.h"
 #include "Coordinate.h"
 
-//Ä¬ÈÏ:ºÚµ×°××Ö
+//é»˜è®¤:é»‘åº•ç™½å­—
 static WORD defaultAttr = 0x0007;
-//¸ßÁÁ:Ä¬ÈÏ+·´É«+ÏÂ»®Ïß
+//é«˜äº®:é»˜è®¤+åè‰²+ä¸‹åˆ’çº¿
 static WORD highlightAttr = 0x6007;
 
-//µ÷Õû²Ëµ¥¸ßÁÁÇøÓò
+//è°ƒæ•´èœå•é«˜äº®åŒºåŸŸ
 void SwitchMenuHighlight(COORD cdCurrent, COORD cdTarget, SHORT sWidth)
 {
-    //»Ø¹éÄ¬ÈÏ×´Ì¬
+    //å›å½’é»˜è®¤çŠ¶æ€
     SetRectAttr(cdCurrent,SHORT2COORD(cdCurrent.X + sWidth - 1,cdCurrent.Y),defaultAttr);
     SetRectAttr(cdTarget,SHORT2COORD(cdTarget.X + sWidth - 1,cdTarget.Y),highlightAttr);
 }
 
-//ÏÔÊ¾²Ëµ¥ ·µ»Ø´ıµ÷ÓÃµÄº¯ÊıÖ¸Õë
+//å±•ç¤ºä¸€ä¸ªçº¿æ€§çš„èœå•,ä»…è¿”å›ä¸€ä¸ªèœå•é¡¹å¯¹åº”çš„æ•°å­—,ä½†æ˜¯é€‰æ‹©/é«˜äº®åŠŸèƒ½ä¸èœå•ç›¸åŒ
+int ShowSimpleMenu(char *contents[], int size, COORD cdBeginPos)
+{
+    //æšä¸¾å˜é‡
+    int i;
+    COORD cdCursor = cdBeginPos;
+    COORD cdTargetCursor;
+    int iMenuWidth = 0;
+    int iIndex = 0;
+    BOOL bLoop = TRUE;
+    int iKeyInput;
+    //è¾“å‡ºèœå•å†…å®¹
+    for (i = 0; i < size; i++)
+    {
+        //æ‰“å°
+        printf("[%d]%s", i, contents[i]);
+        //è·å–æœ€å¤§å€¼
+        int length = strlen(contents[i]) + 3;
+        iMenuWidth = length > iMenuWidth ? length : iMenuWidth;
+        //å¾€ä¸‹ç§»ä¸€è¡Œ
+        cdCursor.Y++;
+        cdCursor.X = cdBeginPos.X;
+        SetPos(cdCursor);
+    }
+    //è®¾ç½®ç¬¬ä¸€æ¡é«˜å…‰
+    cdCursor = cdBeginPos;
+    SwitchMenuHighlight(cdCursor,cdCursor,iMenuWidth);
+    //é”®ç›˜æ“ä½œå¾ªç¯
+    while(bLoop)
+    {
+        iKeyInput = GetKeyBoardInput();
+        //æ ¹æ®è¾“å…¥ä¿®æ”¹iIndexçš„å€¼
+        switch (iKeyInput)
+        {
+        case keycode_UpArrow:
+            if (iIndex <= 0)
+            {
+                iIndex = size - 1;
+            }
+            else
+            {
+                iIndex--;
+            }
+            break;
+        case keycode_DownArrow:
+            if (iIndex >= size - 1)
+            {
+                iIndex = 0;
+            }else
+            {
+                iIndex++;
+            }
+            break;
+        case keycode_Enter:
+            bLoop = FALSE;
+            break;
+        default:
+            if (iKeyInput >= '0' && iKeyInput <= size -1 + '0')
+            {
+                iIndex = iKeyInput - '0';
+            }
+                break;
+        }
+        //æ ¹æ®iIndexè½¬æ¢é«˜äº®ä½ç½®
+        cdTargetCursor = SHORT2COORD(cdBeginPos.X,cdBeginPos.Y + iIndex);
+        SwitchMenuHighlight(cdCursor,cdTargetCursor,iMenuWidth);
+        //é‡ç½®å…‰æ ‡ä½ç½®
+        cdCursor = cdTargetCursor;
+    }
+    //æ¸…é™¤èœå•
+    SetRectChar(cdBeginPos, COORD_Add(cdBeginPos, SHORT2COORD(iMenuWidth - 1, size - 1)), ' ');
+    SetRectAttr(cdBeginPos, COORD_Add(cdBeginPos, SHORT2COORD(iMenuWidth - 1, size - 1)), 0x0007);
+    SetPos(cdBeginPos);
+    return iIndex;
+}
+
+//æ˜¾ç¤ºèœå• è¿”å›å¾…è°ƒç”¨çš„å‡½æ•°æŒ‡é’ˆ
 void (*ShowMenu(COORD cdBeginPos, MenuNode *contents, size_t arraySize))(void)
 {
     size_t i;
     SHORT sSelectingMenuID = 0;
     COORD cdMenuCursor = cdBeginPos;
-    //Ä¿Ç°×ø±ê(Ôİ´æ±äÁ¿)
+    //ç›®å‰åæ ‡(æš‚å­˜å˜é‡)
     COORD cdCurrentPos;
-    //Ä¿±ê×ø±ê
+    //ç›®æ ‡åæ ‡
     COORD cdTargetPos;
     SHORT menuWidth = 0;
-    //ÆôÓÃÑ­»·
+    //å¯ç”¨å¾ªç¯
     BOOL canLoop = TRUE;
     void (*action)(void) = NULL;
     SetPos(cdBeginPos);
     for(i = 0,cdCurrentPos = cdBeginPos;i<arraySize;i++,cdCurrentPos.Y++)
     {
-        //±éÀúÊä³öÃ¿¸ö²Ëµ¥Ïî
+        //éå†è¾“å‡ºæ¯ä¸ªèœå•é¡¹
         SetPos(cdCurrentPos);
-        //ÓÃ×ÖÄ¸±àºÅ ÔİÊ±²»¹Ü²Ëµ¥ÊıÁ¿´óÓÚ26µÄÇé¿ö
+        //ç”¨å­—æ¯ç¼–å· æš‚æ—¶ä¸ç®¡èœå•æ•°é‡å¤§äº26çš„æƒ…å†µ
         printf("[%c]%s",i+'a',contents[i].lable);
         SHORT tmpLen = strlen(contents[i].lable) + 3;
         menuWidth = tmpLen>menuWidth ? tmpLen : menuWidth;
     }
-    //¸ßÁÁ
+    //é«˜äº®
     cdCurrentPos = cdBeginPos;
     SetRectAttr(cdMenuCursor,SHORT2COORD(cdMenuCursor.X + menuWidth - 1,cdMenuCursor.Y),highlightAttr);
     while(canLoop)
@@ -52,58 +128,58 @@ void (*ShowMenu(COORD cdBeginPos, MenuNode *contents, size_t arraySize))(void)
         switch(input)
         {
         case keycode_UpArrow:
-            //ÏòÉÏ
+            //å‘ä¸Š
             cdTargetPos = cdCurrentPos;
             if(sSelectingMenuID == 0)
             {
-                //ÔÚµÚÒ»¸ö²Ëµ¥Ïî
+                //åœ¨ç¬¬ä¸€ä¸ªèœå•é¡¹
                 sSelectingMenuID = arraySize - 1;
             }else
             {
                 sSelectingMenuID--;
             }
             cdTargetPos.Y = cdBeginPos.Y + sSelectingMenuID;
-            //ÒÆ¶¯¸ßÁÁ
+            //ç§»åŠ¨é«˜äº®
             SwitchMenuHighlight(cdCurrentPos,cdTargetPos,menuWidth);
             cdCurrentPos = cdTargetPos;
             break;
         case keycode_DownArrow:
-            //ÏòÏÂ
+            //å‘ä¸‹
             cdTargetPos = cdCurrentPos;
             if(sSelectingMenuID == arraySize - 1)
             {
-                //ÔÚ×îºóÒ»¸ö²Ëµ¥Ïî
+                //åœ¨æœ€åä¸€ä¸ªèœå•é¡¹
                 sSelectingMenuID = 0;
             }else
             {
                 sSelectingMenuID++;
             }
             cdTargetPos.Y = cdBeginPos.Y + sSelectingMenuID;
-            //ÒÆ¶¯¸ßÁÁ
+            //ç§»åŠ¨é«˜äº®
             SwitchMenuHighlight(cdCurrentPos,cdTargetPos,menuWidth);
             cdCurrentPos = cdTargetPos;
             break;
         case keycode_RightArrow:
-            //ÏòÓÒ
+            //å‘å³
             if(contents[sSelectingMenuID].childs==NULL)
             {
-                //Ã»ÓĞ×Ó²Ëµ¥
-                //É¶¶¼²»¸É
+                //æ²¡æœ‰å­èœå•
+                //å•¥éƒ½ä¸å¹²
             }else
             {
-                //½øÈë×Ó²Ëµ¥
-                //Ã»ÓĞÖ´ĞĞÈÎÎñÔò¼ÌĞøÑ­»·
+                //è¿›å…¥å­èœå•
+                //æ²¡æœ‰æ‰§è¡Œä»»åŠ¡åˆ™ç»§ç»­å¾ªç¯
                 action = ShowMenu(SHORT2COORD(cdCurrentPos.X + menuWidth + 1, cdCurrentPos.Y),
                     contents[sSelectingMenuID].childs,
                     contents[sSelectingMenuID].childNum);
                 if(action != NULL)
                 {
-                    //·µ»ØµÄº¯Êı²»Îª¿Õ
-                    //Çå³ı²Ëµ¥ÄÚÈİ
+                    //è¿”å›çš„å‡½æ•°ä¸ä¸ºç©º
+                    //æ¸…é™¤èœå•å†…å®¹
                     SetRectChar(cdBeginPos,SHORT2COORD(cdBeginPos.X + menuWidth - 1,cdBeginPos.Y + arraySize - 1),' ');
-                    //Çå³ı²Ëµ¥ÑÕÉ«
+                    //æ¸…é™¤èœå•é¢œè‰²
                     SetRectAttr(cdBeginPos,SHORT2COORD(cdBeginPos.X + menuWidth - 1,cdBeginPos.Y + arraySize - 1),defaultAttr);
-                    //·µ»ØÆğÊ¼µã
+                    //è¿”å›èµ·å§‹ç‚¹
                     SetPos(cdBeginPos);
                     canLoop = FALSE;
                 }
@@ -111,51 +187,51 @@ void (*ShowMenu(COORD cdBeginPos, MenuNode *contents, size_t arraySize))(void)
             }
             break;
         case keycode_Enter:
-            //»Ø³µ
+            //å›è½¦
             if(contents[sSelectingMenuID].action == NULL)
             {
-                //Ã»ÓĞ²Ëµ¥º¯Êı
-                //É¶¶¼²»¸É
+                //æ²¡æœ‰èœå•å‡½æ•°
+                //å•¥éƒ½ä¸å¹²
             }else
             {
-                //Çå³ı²Ëµ¥ÄÚÈİ
+                //æ¸…é™¤èœå•å†…å®¹
                 SetRectChar(cdBeginPos,SHORT2COORD(cdBeginPos.X + menuWidth - 1,cdBeginPos.Y + arraySize - 1),' ');
-                //Çå³ı²Ëµ¥ÑÕÉ«
+                //æ¸…é™¤èœå•é¢œè‰²
                 SetRectAttr(cdBeginPos,SHORT2COORD(cdBeginPos.X + menuWidth - 1,cdBeginPos.Y + arraySize - 1),defaultAttr);
-                //·µ»ØÆğÊ¼µã
+                //è¿”å›èµ·å§‹ç‚¹
                 SetPos(cdBeginPos);
                 canLoop = FALSE;
-                //»ñÈ¡²Ëµ¥ÄÚÈİ
+                //è·å–èœå•å†…å®¹
                 action = contents[sSelectingMenuID].action;
             }
             break;
         case keycode_LeftArrow:
-            //Ïò×ó
+            //å‘å·¦
         case keycode_Escape:
-            //ÍË³ö
+            //é€€å‡º
             if(!contents[sSelectingMenuID].isRoot)
             {
-                //²»ÊÇ¸ù²Ëµ¥
-                //Çå³ı²Ëµ¥ÄÚÈİ
+                //ä¸æ˜¯æ ¹èœå•
+                //æ¸…é™¤èœå•å†…å®¹
                 SetRectChar(cdBeginPos,SHORT2COORD(cdBeginPos.X + menuWidth - 1,cdBeginPos.Y + arraySize - 1),' ');
-                //Çå³ı²Ëµ¥ÑÕÉ«
+                //æ¸…é™¤èœå•é¢œè‰²
                 SetRectAttr(cdBeginPos,SHORT2COORD(cdBeginPos.X + menuWidth - 1,cdBeginPos.Y + arraySize - 1),defaultAttr);
-                //·µ»Øµ½³õÊ¼×ø±ê
+                //è¿”å›åˆ°åˆå§‹åæ ‡
                 SetPos(cdBeginPos);
-                //½ûÓÃÑ­»·ÒÔ½áÊøµ±Ç°²Ëµ¥
+                //ç¦ç”¨å¾ªç¯ä»¥ç»“æŸå½“å‰èœå•
                 canLoop = FALSE;
             }
             break;
         default:
-            //ÆäËûÇé¿ö,Ö§³ÖÓÃ×ÖÄ¸¶¨Î»²Ëµ¥
+            //å…¶ä»–æƒ…å†µ,æ”¯æŒç”¨å­—æ¯å®šä½èœå•
             if(input>='A' && input <='Z')
             {
-                //×ª»»³ÉĞ¡Ğ´
+                //è½¬æ¢æˆå°å†™
                 input+='a'-'A';
             }
             if(input>='a' && input<='z' && (input - 'a')<arraySize)
             {
-                //Ìø×ªµ½¶ÔÓ¦²Ëµ¥²¢¸üĞÂÏà¹Ø²ÎÊı
+                //è·³è½¬åˆ°å¯¹åº”èœå•å¹¶æ›´æ–°ç›¸å…³å‚æ•°
                 cdTargetPos = cdBeginPos;
                 sSelectingMenuID = input - 'a';
                 cdTargetPos.Y += sSelectingMenuID;
