@@ -5,6 +5,7 @@
 #include "MsgBox.h"
 #include "ColorfulConsoler.h"
 #include "KeyCtrl.h"
+#include "Coordinate.h"
 
 //显示一个对话框,用方向键控制选中的按钮,按下回车则返回对应的值
 int ShowMsgBox(const char *msg)

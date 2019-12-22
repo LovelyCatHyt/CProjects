@@ -4,13 +4,6 @@
 #include <time.h>
 #include "ColorfulConsoler.h"
 
-
-COORD SHORT2COORD(SHORT x,SHORT y)
-{
-    COORD result = {x,y};
-    return result;
-}
-
 COORD GetCurrentCursor()
 {
     HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -35,7 +28,7 @@ void SetRectAttr(COORD beginPos,COORD endPos,WORD attr)
 //设置一片区域的字符
 void SetRectChar(COORD beginPos,COORD endPos,WCHAR c)
 {
-    
+
     HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD cdCurrent;
     DWORD width = endPos.X - beginPos.X + 1;

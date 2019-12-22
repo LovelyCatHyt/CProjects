@@ -4,6 +4,7 @@
 #include "MenuMgr.h"
 #include "ColorfulConsoler.h"
 #include "KeyCtrl.h"
+#include "Coordinate.h"
 
 //Ä¬ÈÏ:ºÚµ×°××Ö
 static WORD defaultAttr = 0x0007;
