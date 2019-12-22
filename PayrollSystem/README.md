@@ -13,24 +13,24 @@
    - 不允许出现**重复**的员工编号,即使与原编号相同
    - 编辑后可以不保存到工资表
 ### 排序功能
-   - 按**ID**排序 [SortByID()](main.c#L445)
-   - 按**姓名**排序[SortByName()](main.c#L454)
-   - 按**基本工资**排序 [SortByBaseWage()](main.c#L463)
-   - 按**实发工资**排序 [SortByTakeHomePay()](main.c#L472)
-### 删除数据 [RemoveData()](main.c#L190)
+   - 按**ID**排序 [SortByID()](main.c#L429)
+   - 按**姓名**排序[SortByName()](main.c#L438)
+   - 按**基本工资**排序 [SortByBaseWage()](main.c#L447)
+   - 按**实发工资**排序 [SortByTakeHomePay()](main.c#L456)
+### 删除数据 [RemoveData()](main.c#L180)
    - 用**数字索引**确定要删除的一条数据
    - 可以取消删除
-### 统计功能 [DoStatistic()](main.c#L221)
+### 统计功能 [DoStatistic()](main.c#L216)
    - 统计不同实发工资区间的人数:**低收入**(0~5000) **中等收入**(5000~10000) 高收入(10000+)
    - 统计各项的**最大值**、**最小值**和**平均值**
-### 查询数据 [SearchData()](main.c#L348)
+### 查询数据 [SearchData()](main.c#L343)
    - 按**ID**查询
    - 按**姓名**查询
    - 按**实发工资**查询
-### 退出系统 [ExitSystem()](main.c#L428)
+### 退出系统 [ExitSystem()](main.c#L417)
    - 可以取消退出
 ## 系统组成
-### Main
+### [Main](main.c)
 这一部分仅由main.c构成  
 结构体数组`FArray payrollList`定义于此  
 ~~因为数据是全局的不想破坏封装所以这个里面有400+行~~  
@@ -57,21 +57,24 @@
    [Console Screen Buffers - 控制台屏幕缓冲](https://docs.microsoft.com/en-us/windows/console/console-screen-buffers)  
    [SetConsoleTextAttribute function - 设置控制台文本属性](https://docs.microsoft.com/en-us/windows/console/setconsoletextattribute)  
    [FillConsoleOutputAttribute function - 填充控制台输出属性](https://docs.microsoft.com/en-us/windows/console/fillconsoleoutputattribute)  
-3. [<span id = "menumgr">MenuMgr.c</span>](Toolkit/MenuMgr.c)
+3. [<span id = "menumgr">MenuMgr.c - 菜单管理器</span>](Toolkit/MenuMgr.c)
    - 菜单管理器:能够展示一个菜单,该菜单可以用**方向键**控制.
    - 该菜单允许通过<kbd>↑</kbd><kbd>↓</kbd>选择**同一级**菜单的不同项,允许通过<kbd>←</kbd><kbd>→</kbd>选择**上一级**/**下一级**菜单,用<kbd>Enter</kbd>执行菜单内容
    - 允许按下菜单项前对应的字母定位到对应菜单项(仅限同一级菜单)
    - **高亮**显示选中的菜单
-4. [MsgBox.c](Toolkit/MsgBox.c)
-   - 弹出一个"弹窗",用<kbd>←</kbd><kbd>→</kbd>选择"确认"或"取消",用<kbd>Enter</kbd>确定.
+   - 还有一个简化版:[`ShowSimpleMenu()`](Toolkit/MenuMgr.c)仅返回一个int类的数据,且没有子菜单
+4. [MsgBox.c - 消息弹窗](Toolkit/MsgBox.c)~~但其实没有弹窗~~
+   - 显示一个"弹窗",用<kbd>←</kbd><kbd>→</kbd>选择"确认"或"取消",用<kbd>Enter</kbd>确定.
    - 当前选项会被**高亮**
-5. [KeyCtrl.c](Toolkit/KeyCtrl.c)
+5. [KeyCtrl.c - 键盘控制](Toolkit/KeyCtrl.c)
    - 提供一个函数[GetKeyInput()](Toolkit/KeyCtrl.c#L5),返回敲下的按键的**键码**
    - 但是由于某些键的特殊性,因此**自定义**了几个键码,在头文件保存为[enum KeyCode](Toolkit/KeyCtrl.h#L4)
-6. [BetterIO.c](Toolkit/BetterIO.c)
+6. [BetterIO.c - 更好的输入输出](Toolkit/BetterIO.c)
    - 该模块试图实现两个功能: **Delay()** 延时和**ClearUselessInput()** 清除无用输入
    - 但是**并没有达到最初编写这个模块的期望目标**:Delay的过程中用户输入会被下一次调用的scanf/getch等函数接收而产生不可预料的后果,ClearUserInput会导致程序暂停等待输入,而原计划是不产生停顿.
-7. [Debugger.c](Toolkit/Debugger.c)
+7. [Coordinate.c - 坐标](TOolkit/Coordinate.c)
+   - 提供一系列有关COORD的函数
+8. [Debugger.c - 调错器](Toolkit/Debugger.c)
    - ~~其实现在更像一个Logger~~
    - 用于打印带颜色和时间的Log Warning Error
    - 本来想实现可变参数列表,但是那样的话无法将参数全部传入printf.(除非实现一个语法分析,直接传递格式化的结果也是能实现~~但我不想做~~)
