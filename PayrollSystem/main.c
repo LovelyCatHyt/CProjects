@@ -9,6 +9,7 @@
 #include "Data/DataInput.h"
 #include "Toolkit/ColorfulConsoler.h"
 #include "Toolkit/MsgBox.h"
+#include "Data/Payroll_JSON.h"
 
 //全文件可见的工资表
 static FArray payrollList = {NULL, 0, 0};
@@ -18,14 +19,15 @@ static MenuNode mainMenu[] =
         {InputData, "输入数据", TRUE, NULL, 0},
         {EditData, "编辑数据", TRUE, NULL, 0},
         {NULL, "数据排序>", TRUE, (MenuNode[]){
-            {SortByID, "ID排序", FALSE, NULL, 0}, 
-            {SortByName, "姓名排序", FALSE, NULL, 0}, 
+            {SortByID, "ID排序", FALSE, NULL, 0},
+            {SortByName, "姓名排序", FALSE, NULL, 0},
             {SortByBaseWage, "基本工资排序", FALSE, NULL, 0},
             {SortByTakeHomePay, "实发工资排序", FALSE, NULL, 0}
         }, 4},
         {RemoveData, "删除数据", TRUE, NULL, 0},
         {DoStatistic, "统计数据", TRUE, 0},
         {SearchData, "查询数据", TRUE, 0},
+        {SaveData_UI, "保存数据", TRUE, 0},
         {ExitSystem, "退出系统", TRUE, NULL, 0}};
 
 //一个模块的结束,包括打印最新工资表和显示主菜单
@@ -342,7 +344,6 @@ void DoStatistic()
 //查询数据
 void SearchData()
 {
-    int inputAvailable;
     int itemIndex;
     char toSearchString[32];
     float min, max;
@@ -413,6 +414,14 @@ void SearchData()
     FArray_Free(&foundList);
     EndOfModule();
 }
+//保存数据的用户接口
+void SaveData_UI()
+{
+    system("cls");
+    SaveData(payrollList);
+    PrintLog("数据已保存.");
+    EndOfModule();
+}
 //退出系统
 void ExitSystem()
 {
@@ -465,11 +474,11 @@ void SortByTakeHomePay()
 int main()
 {
 #ifdef TESTING
-    int testing = ShowMsgBox("测试测试");
-    printf("tesing = %d.\n",testing);
 #else // TESTING
     COORD cursor;
     void (*menuAction)(void) = NULL;
+    //加载数据
+    LoadData(&payrollList);
     while (!menuAction)
     {
         //获取当前光标位置
@@ -489,6 +498,7 @@ int main()
             PrintError("ExitMenu with empty funtion pointer!\n");
         }
     }
+    SaveData(payrollList);
 #endif
     return 0;
 }
