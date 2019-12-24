@@ -174,8 +174,8 @@ int LoadData(FArray *out)
             PrintError("文件不完整!请检查数据文件完整性.");
             return 0;
         }
-        Payroll_Initialize(&toAdd,name->string,
-            ID->string,
+        Payroll_Initialize(&toAdd,ID->valuestring,
+            name->valuestring,
             baseWage->valuedouble,
             dutyWage->valuedouble,
             bonus->valuedouble,
