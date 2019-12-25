@@ -12,7 +12,7 @@ COORD GetCurrentCursor()
     return csbiInfo.dwCursorPosition;
 }
 
-/*ÉèÖÃÒ»Æ¬ÇøÓòµÄAttr*/
+/*è®¾ç½®ä¸€ç‰‡åŒºåŸŸçš„Attr*/
 void SetRectAttr(COORD beginPos,COORD endPos,WORD attr)
 {
     HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -25,7 +25,7 @@ void SetRectAttr(COORD beginPos,COORD endPos,WORD attr)
     }
 
 }
-//ÉèÖÃÒ»Æ¬ÇøÓòµÄ×Ö·û
+//è®¾ç½®ä¸€ç‰‡åŒºåŸŸçš„å­—ç¬¦
 void SetRectChar(COORD beginPos,COORD endPos,WCHAR c)
 {
 
@@ -39,7 +39,7 @@ void SetRectChar(COORD beginPos,COORD endPos,WCHAR c)
     }
 }
 
-/*ÉèÖÃ¹â±êÎ»ÖÃ*/
+/*è®¾ç½®å…‰æ ‡ä½ç½®*/
 void SetPos(COORD pos)
 {
     HANDLE handle;
@@ -47,23 +47,23 @@ void SetPos(COORD pos)
     SetConsoleCursorPosition(handle,pos);
 }
 
-/*ÉèÖÃÑÕÉ«*/
+/*è®¾ç½®é¢œè‰²*/
 void SetColor(unsigned short ForeColor,unsigned short BackGroundColor)
 {
 
 /*
-¶ÔÓ¦µÄÑÕÉ«Âë±í£º
-0 = ºÚÉ«       8 = »ÒÉ«
-1 = À¶É«       9 = µ­À¶É«
-2 = ÂÌÉ«       10 = µ­ÂÌÉ«
-3 = Ç³ÂÌÉ«     11 = µ­Ç³ÂÌÉ«
-4 = ºìÉ«       12 = µ­ºìÉ«
-5 = ×ÏÉ«       13 = µ­×ÏÉ«
-6 = »ÆÉ«       14 = µ­»ÆÉ«
-7 = °×É«       15 = ÁÁ°×É«
+å¯¹åº”çš„é¢œè‰²ç è¡¨ï¼š
+0 = é»‘è‰²       8 = ç°è‰²
+1 = è“è‰²       9 = æ·¡è“è‰²
+2 = ç»¿è‰²       10 = æ·¡ç»¿è‰²
+3 = æµ…ç»¿è‰²     11 = æ·¡æµ…ç»¿è‰²
+4 = çº¢è‰²       12 = æ·¡çº¢è‰²
+5 = ç´«è‰²       13 = æ·¡ç´«è‰²
+6 = é»„è‰²       14 = æ·¡é»„è‰²
+7 = ç™½è‰²       15 = äº®ç™½è‰²
 */
-HANDLE handle=GetStdHandle(STD_OUTPUT_HANDLE);/*»ñÈ¡µ±Ç°´°¿Ú¾ä±ú*/
-SetConsoleTextAttribute(handle,ForeColor+(BackGroundColor<<4));/*ÉèÖÃÑÕÉ«*/
+HANDLE handle=GetStdHandle(STD_OUTPUT_HANDLE);/*è·å–å½“å‰çª—å£å¥æŸ„*/
+SetConsoleTextAttribute(handle,ForeColor+(BackGroundColor<<4));/*è®¾ç½®é¢œè‰²*/
 }
 
 unsigned int DefaultForeColor = 7,DefaultBackGroundColor = 0;
