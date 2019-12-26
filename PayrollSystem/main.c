@@ -101,7 +101,8 @@ void EditData()
             {
                 //打印当前信息
                 PrintLogWithInt("您选择了索引为%d的信息:", index);
-                PrintPayrollTable(((Payroll *)(payrollList.array)) + index, 1);
+                PrintTableTop(settings.tagAttr);
+                PrintPayroll(((Payroll *)payrollList.array)[index],settings.contentAttrA);
             }
             else
             {
@@ -179,10 +180,10 @@ void EditData()
     }
     //更新应发工资 个税 实付工资
     Payroll_FillContent(&tempPayroll);
-    PrintLog("原信息:");
-    PrintPayrollTable((Payroll *)payrollList.array + index, 1);
-    PrintLog("修改后信息如下:");
-    PrintPayrollTable(&tempPayroll, 1);
+    PrintLog("原信息(上)与修改后信息(下)对比如下:");
+    PrintTableTop(settings.tagAttr);
+    PrintPayroll(((Payroll *)payrollList.array)[index], settings.contentAttrA);
+    PrintPayroll(tempPayroll, settings.contentAttrB);
     PrintWarning("是否保存编辑的信息?");
     if(ShowMsgBox(""))
     {
@@ -565,7 +566,8 @@ int main()
             PrintError("ExitMenu with empty funtion pointer!\n");
         }
     }
-    SaveData(payrollList);
+    if(settings.autoSave)
+        SaveData(payrollList);
 #endif
     return 0;
 }

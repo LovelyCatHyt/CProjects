@@ -5,9 +5,13 @@
 #include <conio.h>
 #include "DataInput.h"
 #include "Payroll.h"
+#include "../Settings/Settings.h"
 #include "../Toolkit/BetterIO.h"
+#include "../Toolkit/MsgBox.h"
 #include "../Toolkit/Debugger.h"
 #include "../Toolkit/FlexibleArray.h"
+
+extern Settings settings;
 
 #ifdef USERINPUT
 void (*DataInput)(FArray*) = UserInput;
@@ -86,7 +90,6 @@ void UserInput(FArray* payrolls)
     char tempID[32];
     char tempName[10];
     int loopInput = 0;
-    char controlInput = 0;
     Payroll tempPayroll;
     int dataAvailable = 0;
     do
@@ -119,41 +122,19 @@ void UserInput(FArray* payrolls)
         //计算公积金
         Payroll_FillContent(&tempPayroll);
         PrintLog("您输入的工资信息如下:");
-        PrintPayrollTable(&tempPayroll,1);
-        PrintLog("是否确认保存?按Esc取消,按回车键确定.");
-        do
+        PrintTableTop(settings.tagAttr);
+        PrintPayroll(tempPayroll,settings.contentAttrB);
+        PrintLog("是否确认输入的数据?");
+        if (ShowMsgBox(""))
         {
-            controlInput = getch();
-        } while (controlInput  != 27 && controlInput != 13);
-        switch (controlInput)
-        {
-        case 27:
-            //Esc
-            PrintLog("本次输入的数据已取消录入.");
-            break;
-        case 13:
-            //Enter
-            FArray_Add(payrolls,&tempPayroll);
+            FArray_Add(payrolls, &tempPayroll);
             PrintLog("本次输入的数据已录入");
-        default:
-            //???
-            break;
         }
-        PrintLog("是否继续输入数据?按Esc取消,按回车键确定.");
-        do
+        else
         {
-            controlInput = getch();
-        } while (controlInput  != 27 && controlInput != 13);
-        switch (controlInput)
-        {
-        case 27:
-            //Esc
-            loopInput = 0;
-            break;
-        case 13:
-            loopInput = 1;
-        default:
-            break;
+            PrintLog("本次输入的数据已取消录入.");
         }
+        PrintLog("是否继续输入数据?");
+        loopInput = ShowMsgBox("");
     }while(loopInput);
 }

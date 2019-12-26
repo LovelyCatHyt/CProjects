@@ -52,6 +52,7 @@ void Payroll_SortByName(FArray payrolls);
 void Payroll_SortByBaseWage(FArray payrolls);
 void Payroll_SortByTakeHomePay(FArray payrolls);
 
+void PrintTableTop(WORD attr);
 void PrintPayroll(Payroll pr,WORD attr);
 
 void PrintPayrollTable(Payroll *prs,int arraySize);

@@ -160,17 +160,17 @@ void Payroll_SortByTakeHomePay(FArray payrolls)
     qsort((Payroll *)payrolls.array,payrolls.arraySize,payrolls.unitSize,Payroll_CmpByTakeHomePay);
 }
 
-void PrintTableTop(unsigned int foreColor,unsigned int backgroundColor)
+void PrintTableTop(WORD attr)
 {
-    SetColor(foreColor,backgroundColor);
-    printf("职工编号  姓名     基本工资 职务工资 津贴     医疗保险 养老保险 失业保险 公积金   应发工资 个人税   实发工资\n");
-    SetColor(WHITE,BLACK);
+    SetAttribute(attr);
+    printf("   职工编号  姓名     基本工资 职务工资 津贴     医疗保险 养老保险 失业保险 公积金   应发工资 个人税   实发工资\n");
+    SetAttribute(settings.consoleDefaultAttr);
 }
 
 void PrintPayroll(Payroll pr,WORD attr)
 {
     SetAttribute(attr);
-    printf("%-9s %-8s %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f\n",
+    printf("   %-9s %-8s %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f\n",
            (char *)pr.ID.array,
            (char *)pr.name.array,
            pr.baseWage,
@@ -189,16 +189,33 @@ void PrintPayroll(Payroll pr,WORD attr)
 void PrintPayrollTable(Payroll *prs,int arraySize)
 {
     int i;
-    PrintTableTop(settings.tagAttr & 0xf,(settings.tagAttr & 0xf0)>>4);
+    PrintTableTop(settings.tagAttr);
     for(i = 0;i<arraySize;i++)
     {
+        WORD attr;
         if(i%2==0)
         {
-            PrintPayroll(prs[i],settings.contentAttrA);
+            attr = settings.contentAttrA;
         }else
         {
-            PrintPayroll(prs[i],settings.contentAttrB);
+            attr = settings.contentAttrB;
         }
+        SetAttribute(attr);
+        printf("[%d]%-9s %-8s %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f\n",
+           i,
+           (char *)prs[i].ID.array,
+           (char *)prs[i].name.array,
+           prs[i].baseWage,
+           prs[i].dutyWage,
+           prs[i].bonus,
+           prs[i].healthInsurance,
+           prs[i].endowmentInsurance,
+           prs[i].unemploymentInsurance,
+           prs[i].providentFund,
+           prs[i].salary,
+           prs[i].incomeTax,
+           prs[i].takeHomePay);
+        SetAttribute(settings.consoleDefaultAttr);
     }
     SetAttribute(settings.consoleDefaultAttr);
 }
