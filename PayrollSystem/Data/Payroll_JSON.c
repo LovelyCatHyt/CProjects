@@ -83,7 +83,7 @@ int LoadData(FArray *out)
     if(!(fData = fopen(dataFileName,"r")))
     {
         //文件不存在或不可读
-        PrintLog("工资表文件不存在!创建一个新的文件保存数据.");
+        PrintError("工资表文件不存在!创建一个新的文件保存数据.");
         CreateNewDataFile(dataFileName);
     }
     if(!CheckJSONFileValid(dataFileName))
@@ -94,6 +94,9 @@ int LoadData(FArray *out)
         {
             //新建
             CreateNewDataFile(dataFileName);
+        }else
+        {
+            return 0;
         }
     }
 

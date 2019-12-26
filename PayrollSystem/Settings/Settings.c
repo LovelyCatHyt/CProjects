@@ -6,6 +6,9 @@
 #include "../Toolkit/Debugger.h"
 #include "../Toolkit/MsgBox.h"
 #include "../Toolkit/MenuMgr.h"
+
+Settings defaultSettings = {0x0f, 0x09, 0x8f, 0x0f, 1};
+
 //将Arrribute转化为相应的color命令,并设置相关模块的默认背景色
 void SetConsoleDefaultColor(WORD attr)
 {
@@ -72,14 +75,8 @@ int GetSettings_JSON(const char *fileName, Settings *settings)
     if(!CheckJSONFileValid(fileName))
     {
         //不是有效的JSON文件
-        PrintError("无效JSON文件!");
-        if(ShowMsgBox("是否新建?"))
-        {
-            CreateEmptyJSON(fileName);
-        }else
-        {
-            return 0;
-        }
+        PrintError("设置文件是无效JSON文件!将自动生成设置文件.");
+        SaveSettings_JSON(fileName, defaultSettings);
     }
     GetWholeFile(&buf,fileName);
     root = cJSON_Parse((char *)buf.array);

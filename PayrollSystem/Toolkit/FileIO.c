@@ -22,7 +22,7 @@ int GetWholeFile(FArray *buffer,const char *fileName)
     FILE *fileTemp = fopen(fileName, "r");
     if(!fileTemp)
     {
-        PrintError("File not exist!");
+        //PrintError("File not exist!");
         FArray_Initialize(buffer, 1, 0);
         return 0;
     }
@@ -37,6 +37,7 @@ int GetWholeFile(FArray *buffer,const char *fileName)
     fseek(fileTemp, filePos, SEEK_SET);
     //读取对应长度
     fread(buffer->array, 1, size, fileTemp);
+    fclose(fileTemp);
     return 0;
 }
 

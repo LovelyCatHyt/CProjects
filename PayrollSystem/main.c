@@ -538,10 +538,10 @@ int main()
     void (*menuAction)(void) = NULL;
     //加载设置
     GetSettings_JSON("Settings.json",&settings);
-    //加载数据
-    LoadData(&payrollList);
     //设置背景色
     SetConsoleDefaultColor(settings.consoleDefaultAttr);
+    //加载数据
+    LoadData(&payrollList);
     while (loopMenu)
     {
         //获取当前光标位置

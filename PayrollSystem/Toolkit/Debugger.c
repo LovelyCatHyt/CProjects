@@ -13,8 +13,8 @@
 #include "../Data/DataInput.h"
 
 static WORD defaultAttr = 0x0f;
-static WORD warningAttr = 0x06;
-static WORD errorAttr = 0x04;
+static WORD warningAttr = 0x0e;
+static WORD errorAttr = 0x0c;
 
 //设置默认的字符属性,传入参数仅使用5~8位
 void DBG_SetDefaultBg(WORD attr)
