@@ -126,9 +126,10 @@ void EditData()
            "基本工资",
            "职务工资",
            "津贴",
+           "医疗保险",
            "养老保险",
            "失业保险",
-           "公积金"},8,GetCurrentCursor());
+           "公积金"},9,GetCurrentCursor());
     switch (column)
     {
     case 0:
@@ -164,12 +165,15 @@ void EditData()
         InputFloat("请输入津贴:", &tempPayroll.bonus, "津贴:%f\n");
         break;
     case 5:
-        InputFloat("请输入养老保险:", &tempPayroll.endowmentInsurance, "养老保险:%f\n");
+        InputFloat("请输入医疗保险:", &tempPayroll.healthInsurance, "医疗保险:%f\n");
         break;
     case 6:
-        InputFloat("请输入失业保险:", &tempPayroll.unemploymentInsurance, "失业保险:%f\n");
+        InputFloat("请输入养老保险:", &tempPayroll.endowmentInsurance, "养老保险:%f\n");
         break;
     case 7:
+        InputFloat("请输入失业保险:", &tempPayroll.unemploymentInsurance, "失业保险:%f\n");
+        break;
+    case 8:
         InputFloat("请输入公积金:", &tempPayroll.providentFund, "公积金:%f\n");
         break;
     }
