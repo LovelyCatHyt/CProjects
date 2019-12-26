@@ -6,43 +6,10 @@
 #include "../Toolkit/Debugger.h"
 #include "Payroll_JSON.h"
 #include "../Toolkit/MsgBox.h"
+#include "../Toolkit/FileIO.h"
 
 //数据的文件名
 char dataFileName[] = "data.json";
-
-int CheckDataFileValid(const char * fileName)
-{
-    int valid = 1;
-    FArray buf;
-    GetWholeFile(&buf, fileName);
-    cJSON *testJSON = cJSON_Parse((char *)buf.array);
-    valid = testJSON != NULL;
-    cJSON_Delete(testJSON);
-    return valid;
-}
-
-int GetWholeFile(FArray *buffer,const char *fileName)
-{
-    FILE *fileTemp = fopen(fileName, "r");
-    if(!fileTemp)
-    {
-        PrintError("File not exist!");
-        FArray_Initialize(buffer, 1, 0);
-        return 0;
-    }
-    unsigned int filePos = ftell(fileTemp);
-    //获取文件长度
-    unsigned int size;
-    fseek(fileTemp, 0, SEEK_END);
-    size = ftell(fileTemp);
-    //初始化缓冲器
-    FArray_Initialize(buffer, 1, size);
-    //重置文件读取位置
-    fseek(fileTemp, filePos, SEEK_SET);
-    //读取对应长度
-    fread(buffer->array, 1, size, fileTemp);
-    return 0;
-}
 
 void CreateNewDataFile(char *fileName)
 {
@@ -119,7 +86,7 @@ int LoadData(FArray *out)
         PrintLog("工资表文件不存在!创建一个新的文件保存数据.");
         CreateNewDataFile(dataFileName);
     }
-    if(!CheckDataFileValid(dataFileName))
+    if(!CheckJSONFileValid(dataFileName))
     {
         //文件不是有效的JSON
         PrintLog("文件不是有效的JSON文件!是否新建?");

@@ -8,6 +8,7 @@ void RemoveData();
 void DoStatistic();
 void SearchData();
 void SaveData_UI();
+void Setting();
 void ExitSystem();
 void SortByID();
 void SortByName();

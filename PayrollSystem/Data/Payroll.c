@@ -6,6 +6,10 @@
 #include "Payroll.h"
 #include "../Toolkit/FlexibleArray.h"
 #include "../Toolkit/ColorfulConsoler.h"
+#include "../Settings/Settings.h"
+#include "../main.h"
+
+extern Settings settings;
 
 void Payroll_Initialize(
     Payroll *pr,
@@ -163,9 +167,9 @@ void PrintTableTop(unsigned int foreColor,unsigned int backgroundColor)
     SetColor(WHITE,BLACK);
 }
 
-void PrintPayroll(Payroll pr,unsigned int foreColor,unsigned int backgroundColor)
+void PrintPayroll(Payroll pr,WORD attr)
 {
-    SetColor(foreColor,backgroundColor);
+    SetAttribute(attr);
     printf("%-9s %-8s %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f %-8.2f\n",
            (char *)pr.ID.array,
            (char *)pr.name.array,
@@ -179,20 +183,24 @@ void PrintPayroll(Payroll pr,unsigned int foreColor,unsigned int backgroundColor
            pr.salary,
            pr.incomeTax,
            pr.takeHomePay);
-    SetColor(WHITE,BLACK);
+    SetAttribute(settings.consoleDefaultAttr);
 }
 
 void PrintPayrollTable(Payroll *prs,int arraySize)
 {
     int i;
-    PrintTableTop(LIGHTBLUE,BLACK);
+    PrintTableTop(settings.tagAttr & 0xf,(settings.tagAttr & 0xf0)>>4);
     for(i = 0;i<arraySize;i++)
     {
-        unsigned int color;
-        color = i%2?BLACK:GRAY;
-        PrintPayroll(prs[i],WHITE,color);
+        if(i%2==0)
+        {
+            PrintPayroll(prs[i],settings.contentAttrA);
+        }else
+        {
+            PrintPayroll(prs[i],settings.contentAttrB);
+        }
     }
-    SetColor(WHITE,BLACK);
+    SetAttribute(settings.consoleDefaultAttr);
 }
 
 #endif // _PAYROLL_

@@ -7,6 +7,17 @@
 #include "KeyCtrl.h"
 #include "Coordinate.h"
 
+static WORD defaultButtonAttr = 0x000f;
+static WORD selectedButtonAttr = 0x00f0;
+
+void MsgBox_SetDefaultBg(WORD attr)
+{
+    //在背景色一栏置0
+    defaultButtonAttr &= 0x0f;
+    //重新设置背景色
+    defaultButtonAttr |= attr & 0xf0;
+}
+
 //显示一个对话框,用方向键控制选中的按钮,按下回车则返回对应的值
 int ShowMsgBox(const char *msg)
 {
@@ -14,8 +25,7 @@ int ShowMsgBox(const char *msg)
     SHORT buttonWidth;
     COORD buttonLeft;
     COORD buttonRight;
-    WORD defaultButtonAttr = 0x000f;
-    WORD selectedButtonAttr = 0x00f0;
+
     int keyInput = 0;
     printf(msg);
     //如果末尾没有换行就手动加一个

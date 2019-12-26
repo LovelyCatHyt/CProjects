@@ -1,6 +1,7 @@
 #ifndef _PAYROLL_H_
 #define _PAYROLL_H_
 
+#include <windows.h>
 #include "../Toolkit/FlexibleArray.h"
 
 typedef struct
@@ -51,7 +52,7 @@ void Payroll_SortByName(FArray payrolls);
 void Payroll_SortByBaseWage(FArray payrolls);
 void Payroll_SortByTakeHomePay(FArray payrolls);
 
-void PrintPayroll(Payroll pr,unsigned int foreColor,unsigned int backgroundColor);
+void PrintPayroll(Payroll pr,WORD attr);
 
 void PrintPayrollTable(Payroll *prs,int arraySize);
 #endif // _PAYROLL_H_

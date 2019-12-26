@@ -1,4 +1,4 @@
-//#define TESTING
+﻿//#define TESTING
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,13 +6,21 @@
 #include "main.h"
 #include "Toolkit/Debugger.h"
 #include "Toolkit/MenuMgr.h"
-#include "Data/DataInput.h"
 #include "Toolkit/ColorfulConsoler.h"
 #include "Toolkit/MsgBox.h"
+#include "Data/DataInput.h"
+#include "Data/Payroll.h"
 #include "Data/Payroll_JSON.h"
+#ifdef TESTING
+#include "cJSON/cJSON.h"
+#endif // TESTING
+#include "Settings/Settings.h"
 
 //全文件可见的工资表
 static FArray payrollList = {NULL, 0, 0};
+//保持菜单循环
+static int loopMenu = 1;
+Settings settings;
 //主菜单
 static MenuNode mainMenu[] =
     {
@@ -28,15 +36,21 @@ static MenuNode mainMenu[] =
         {DoStatistic, "统计数据", TRUE, 0},
         {SearchData, "查询数据", TRUE, 0},
         {SaveData_UI, "保存数据", TRUE, 0},
-        {ExitSystem, "退出系统", TRUE, NULL, 0}};
+        {Setting,"设置",TRUE,0},
+        {ExitSystem, "退出系统", TRUE, NULL, 0}
+    };
 
 //一个模块的结束,包括打印最新工资表和显示主菜单
 void EndOfModule()
 {
-    void (*action)(void) = NULL;
+    //void (*action)(void) = NULL;
     PrintLog("当前工资表数据如下:");
     PrintPayrollTable((Payroll *)payrollList.array, payrollList.arraySize);
-    action = ShowMenu(GetCurrentCursor(), mainMenu, sizeof(mainMenu) / sizeof(MenuNode));
+    if(settings.autoSave)
+    {
+        SaveData(payrollList);
+    }
+    /*action = ShowMenu(GetCurrentCursor(), mainMenu, sizeof(mainMenu) / sizeof(MenuNode));
     if (!action)
     {
         PrintError("Menu return a Null function pointer!");
@@ -45,6 +59,7 @@ void EndOfModule()
     {
         action();
     }
+    */
 }
 
 //输入功能
@@ -422,6 +437,49 @@ void SaveData_UI()
     PrintLog("数据已保存.");
     EndOfModule();
 }
+//设置
+void Setting()
+{
+    int toSetItem = 0;
+    WORD temp;
+    system("cls");
+    PrintLog("【系统设置】");
+    //修改设置菜单时注意更新参数
+    toSetItem = ShowSimpleMenu((char *[])
+                                {
+                                    "控制台默认颜色",
+                                    "工资表表头颜色",
+                                    "工资表数据颜色",
+                                    "自动保存数据"
+                                },4,GetCurrentCursor());
+
+    switch(toSetItem)
+    {
+    case 0:
+
+        PrintLog("请用左右键选择控制台背景颜色:");
+        temp = ChoseColorAttr(GetCurrentCursor())<<4;
+        PrintLog("请选择字体颜色");
+        temp |= ChoseColorAttr(GetCurrentCursor());
+        SetConsoleDefaultColor(settings.consoleDefaultAttr = temp);
+        break;
+    case 1:
+        PrintLog("请用左右键选择工资表表头颜色:");
+        settings.tagAttr = ChoseColorAttr(GetCurrentCursor());
+        break;
+    case 2:
+        PrintLog("请用左右键选择工资表奇数项颜色:");
+        settings.contentAttrA = ChoseColorAttr(GetCurrentCursor())<<4 | 0x0f;
+        PrintLog("请用左右键选择工资表偶数项颜色:");
+        settings.contentAttrB = ChoseColorAttr(GetCurrentCursor())<<4 | 0x0f;
+        break;
+    case 3:
+        settings.autoSave = ShowMsgBox("自动保存数据?");
+        break;
+    }
+    SaveSettings_JSON("Settings.json",settings);
+    EndOfModule();
+}
 //退出系统
 void ExitSystem()
 {
@@ -430,6 +488,7 @@ void ExitSystem()
     if (ShowMsgBox(""))
     {
         PrintLog("感谢您的使用,期待下次再见!");
+        loopMenu = 0;
         return;
     }
     EndOfModule();
@@ -477,9 +536,13 @@ int main()
 #else // TESTING
     COORD cursor;
     void (*menuAction)(void) = NULL;
+    //加载设置
+    GetSettings_JSON("Settings.json",&settings);
     //加载数据
     LoadData(&payrollList);
-    while (!menuAction)
+    //设置背景色
+    SetConsoleDefaultColor(settings.consoleDefaultAttr);
+    while (loopMenu)
     {
         //获取当前光标位置
         cursor = GetCurrentCursor();

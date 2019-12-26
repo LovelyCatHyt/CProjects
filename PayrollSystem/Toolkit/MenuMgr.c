@@ -7,9 +7,18 @@
 #include "Coordinate.h"
 
 //默认:黑底白字
-static WORD defaultAttr = 0x0007;
+static WORD defaultAttr = 0x000f;
 //高亮:默认+反色+下划线
-static WORD highlightAttr = 0x6007;
+static WORD highlightAttr = 0x600f;
+
+//设置菜单默认背景色
+void MenuMgr_SetDefaultBg(WORD attr)
+{
+    //在背景色一栏置0
+    defaultAttr &= 0x0f;
+    //重新设置背景色
+    defaultAttr |= attr & 0xf0;
+}
 
 //调整菜单高亮区域
 void SwitchMenuHighlight(COORD cdCurrent, COORD cdTarget, SHORT sWidth)
@@ -30,6 +39,7 @@ int ShowSimpleMenu(char *contents[], int size, COORD cdBeginPos)
     int iIndex = 0;
     BOOL bLoop = TRUE;
     int iKeyInput;
+    SetAttribute(defaultAttr);
     //输出菜单内容
     for (i = 0; i < size; i++)
     {
@@ -90,7 +100,7 @@ int ShowSimpleMenu(char *contents[], int size, COORD cdBeginPos)
     }
     //清除菜单
     SetRectChar(cdBeginPos, COORD_Add(cdBeginPos, SHORT2COORD(iMenuWidth - 1, size - 1)), ' ');
-    SetRectAttr(cdBeginPos, COORD_Add(cdBeginPos, SHORT2COORD(iMenuWidth - 1, size - 1)), 0x0007);
+    SetRectAttr(cdBeginPos, COORD_Add(cdBeginPos, SHORT2COORD(iMenuWidth - 1, size - 1)), defaultAttr);
     SetPos(cdBeginPos);
     return iIndex;
 }
@@ -110,6 +120,7 @@ void (*ShowMenu(COORD cdBeginPos, MenuNode *contents, size_t arraySize))(void)
     BOOL canLoop = TRUE;
     void (*action)(void) = NULL;
     SetPos(cdBeginPos);
+    SetAttribute(defaultAttr);
     for(i = 0,cdCurrentPos = cdBeginPos;i<arraySize;i++,cdCurrentPos.Y++)
     {
         //遍历输出每个菜单项

@@ -2,8 +2,9 @@
 #define _COLORFULCONSOLER_C_
 
 #include <time.h>
+#include <stdio.h>
 #include "ColorfulConsoler.h"
-
+#include "KeyCtrl.h"
 COORD GetCurrentCursor()
 {
     HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -66,6 +67,13 @@ HANDLE handle=GetStdHandle(STD_OUTPUT_HANDLE);/*获取当前窗口句柄*/
 SetConsoleTextAttribute(handle,ForeColor+(BackGroundColor<<4));/*设置颜色*/
 }
 
+//设置字符属性
+void SetAttribute(WORD attr)
+{
+    HANDLE handle=GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(handle, attr);
+}
+
 unsigned int DefaultForeColor = 7,DefaultBackGroundColor = 0;
 
 void DefaultColor()
@@ -73,4 +81,43 @@ void DefaultColor()
     SetColor(DefaultForeColor,DefaultBackGroundColor);
 }
 
+//允许用户通过按键选择一个颜色
+WORD ChoseColorAttr(COORD cdBeginPos)
+{
+    WORD currentChosen = 0;
+    int canExit = 0;
+    COORD left = cdBeginPos,right = cdBeginPos;
+    right.X += strlen("    ") - 1;
+    SetPos(cdBeginPos);
+    printf("    \n");
+    do
+    {
+        switch(GetKeyBoardInput())
+        {
+        case keycode_LeftArrow:
+            if(currentChosen==0)
+            {
+                currentChosen = 0xf;
+            }else
+            {
+                currentChosen--;
+            }
+            break;
+        case keycode_RightArrow:
+            if(currentChosen==0xf)
+            {
+                currentChosen = 0;
+            }else
+            {
+                currentChosen++;
+            }
+            break;
+        case keycode_Enter:
+            canExit = 1;
+            break;
+        }
+        SetRectAttr(left,right,(currentChosen<<4) & 0xf0);
+    }while(!canExit);
+    return currentChosen;
+}
 #endif // _COLORFULCONSOLER_C_

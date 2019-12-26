@@ -1,8 +1,10 @@
 #ifndef _DEBUGGER_H_
 #define _DEBUGGER_H_
 
+#include <windows.h>
+
 /*Debugger*/
-void Test();
+void DBG_SetDefaultBg(WORD attr);
 void PrintCurrentTime();
 void PrintLog(const char *log);
 void PrintLogWithInt(const char *formatter,int a);

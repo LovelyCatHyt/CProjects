@@ -1,4 +1,4 @@
-#ifndef _COLORFULCONSOLER_H_
+﻿#ifndef _COLORFULCONSOLER_H_
 #define _COLORFULCONSOLER_H_
 #include <windows.h>
 
@@ -21,9 +21,10 @@ void SetPos(COORD pos);
 #define LIGHTYELLOW 14
 #define LIGHTWHITE 15
 void SetColor(unsigned short ForeColor,unsigned short BackGroundColor);
+void SetAttribute(WORD attr);
 void SetRectAttr(COORD beginPos,COORD endPos,WORD attr);
 void SetRectChar(COORD beginPos,COORD endPos,WCHAR c);
 void DefaultColor();
 COORD GetCurrentCursor();
-
+WORD ChoseColorAttr(COORD cdBeginPos);
 #endif // _COLORFULCONSOLER_H_
