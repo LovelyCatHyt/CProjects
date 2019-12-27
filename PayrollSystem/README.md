@@ -1,33 +1,54 @@
 # 课设:工资管理系统
 ## 使用说明
+### 使用说明的使用说明
+   - 如果不是在Github上看到这个项目,强烈建议访问我的[Github上的Repo](https://github.com/LovelyCatHyt/CProjects/tree/master/PayrollSystem)
+   - 原文档为.md格式(*markdown*),如果没有md阅读器,则打开.docx版本,但可能不支持部分链接
+   - 若使用支持**GFM**的md阅读器,部分链接可以直接跳转到对应的内容.通常情况的md阅读器也能支持大部分链接.
+   - 部分链接直接引用了代码中的**具体行数**,但由于编写本文档时代码可能发生变动,因此定位可能会有一定偏差.
 ### 总述
    - 功能之间的串联由[菜单系统](#menumgr)实现.  
    - 部分询问提供"__确定__""__取消__"两个选项,也可以用<kbd>←</kbd><kbd>→</kbd>选择,<kbd>Enter</kbd>确定
-### 输入功能 [InputData()](main.c#L49)
+     - 样例:![MsgBox1](HelpPictures/MsgBox1.png)
+   - 程序第一次运行时会在运行路径处自动创建Setttings.json,Data.json.可以直接修改json中的内容来修改数据,也可以较方便地转化成其他形式的数据.
+### 输入功能 `InputData()`
    - 根据程序给出的提示输入相应数据,每项数据输入后按下<kbd>Enter</kbd>提交
    - 不允许出现**重复**的编号
    - 可以取消保存编辑的信息
    - 默认循环输入
-### 编辑功能 [EditData()](main.c#L64)
+### 编辑功能 `EditData()`
    - 用**数字索引**选择指定信息的指定项目进行编辑,输入**负数**则退出编辑功能
    - 不允许出现**重复**的员工编号,即使与原编号相同
    - 编辑后可以不保存到工资表
+     - 显示编辑前后对照:![Edit1](HelpPictures/Edit1.png)
 ### 排序功能
-   - 按**ID**排序 [SortByID()](main.c#L429)
-   - 按**姓名**排序[SortByName()](main.c#L438)
-   - 按**基本工资**排序 [SortByBaseWage()](main.c#L447)
-   - 按**实发工资**排序 [SortByTakeHomePay()](main.c#L456)
-### 删除数据 [RemoveData()](main.c#L180)
+   - 按**ID**排序 `SortByID()`
+   - 按**姓名**排序 `SortByName()`
+   - 按**基本工资**排序 `SortByBaseWage()`
+   - 按**实发工资**排序 `SortByTakeHomePay()`
+   - 排序后功能自动退出
+### 删除数据 `RemoveData()`
    - 用**数字索引**确定要删除的一条数据
    - 可以取消删除
-### 统计功能 [DoStatistic()](main.c#L216)
+### 统计功能 `DoStatistic()`
    - 统计不同实发工资区间的人数:**低收入**(0~5000) **中等收入**(5000~10000) 高收入(10000+)
    - 统计各项的**最大值**、**最小值**和**平均值**
-### 查询数据 [SearchData()](main.c#L343)
+     - 显示样例:![Statistic](HelpPictures/Statistic1.png)
+   - 显示后功能自动退出
+### 查询数据 `SearchData()`
    - 按**ID**查询
    - 按**姓名**查询
    - 按**实发工资**查询
-### 退出系统 [ExitSystem()](main.c#L417)
+     - 输入下限、上限后显示对应列表
+### 设置 `Settings()`
+   - 设置控制台默认颜色
+   - 设置工资表表头文字颜色
+   - 设置工资表内容背景色
+   - 设置是否自动保存
+   - 进入设置界面后会显示一个色块,用<kbd>←</kbd><kbd>→</kbd>进行选择,用<kbd>Enter</kbd>确认.
+     - 设置示例:![Color1](HelpPictures/Color1.png)
+### 保存数据 `SaveData_UI()`
+   - 保存当前程序中的工资表
+### 退出系统 `ExitSystem()`
    - 可以取消退出
 ## 系统组成
 ### [Main](main.c)
@@ -46,7 +67,7 @@
 1. [FlexibleArray.c - 变长数组](Toolkit/FlexibleArray.c)
    - 顾名思义 长度可以变化的数组
    - 支持**任意**数据类型,只需在初始化时填入相应类型大小(如`sizeof(int)`)
-   - 提供[Add()](Toolkit/FlexibleArray.c#L22) [RemoveAt()](Toolkit/FlexibleArray.c#L29) [Search()](Toolkit/FlexibleArray.c#L105) [SerachByCondition()](Toolkit/FlexibleArray.c#L89) 等函数,使变长数组更容易使用
+   - 提供`Add()` `RemoveAt()` `Search()` `SerachByCondition()` 等函数,使变长数组更容易使用
    - 但是使用时一定要注意Init和Free 否则会报0xC000 0005错误,因为访问了非法内存地址
    - 读取数组中的值时要进行较复杂的**类型转换**,如`((char *)a->array)[i]`.所以若需要在一个函数中多次使用,建议定义一个普通的指针简化调用语句
 2. [ColorfulConsoler.c - 多彩的控制台](Toolkit/ColorfulConsoler.c)  
@@ -62,7 +83,9 @@
    - 该菜单允许通过<kbd>↑</kbd><kbd>↓</kbd>选择**同一级**菜单的不同项,允许通过<kbd>←</kbd><kbd>→</kbd>选择**上一级**/**下一级**菜单,用<kbd>Enter</kbd>执行菜单内容
    - 允许按下菜单项前对应的字母定位到对应菜单项(仅限同一级菜单)
    - **高亮**显示选中的菜单
-   - 还有一个简化版:[`ShowSimpleMenu()`](Toolkit/MenuMgr.c)仅返回一个int类的数据,且没有子菜单
+   - 菜单样例:![菜单样例](HelpPictures/Menu1.png)
+   - 还有一个简化版:[`ShowSimpleMenu()`](Toolkit/MenuMgr.c)仅返回一个int类的数据,且没有子菜单.但是可以用数字定位到对应项目.
+     - 简化菜单样例:![简化菜单样例](HelpPictures/SimpleMenu1.png)
 4. [MsgBox.c - 消息弹窗](Toolkit/MsgBox.c)~~但其实没有弹窗~~
    - 显示一个"弹窗",用<kbd>←</kbd><kbd>→</kbd>选择"确认"或"取消",用<kbd>Enter</kbd>确定.
    - 当前选项会被**高亮**
