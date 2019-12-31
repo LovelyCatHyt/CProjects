@@ -8,6 +8,7 @@
 #include "Toolkit/MenuMgr.h"
 #include "Toolkit/ColorfulConsoler.h"
 #include "Toolkit/MsgBox.h"
+#include "Toolkit/Coordinate.h"
 #include "Data/DataInput.h"
 #include "Data/Payroll.h"
 #include "Data/Payroll_JSON.h"
@@ -27,7 +28,7 @@ static MenuNode mainMenu[] =
         {InputData, "输入数据", TRUE, NULL, 0},
         {EditData, "编辑数据", TRUE, NULL, 0},
         {NULL, "数据排序>", TRUE, (MenuNode[]){
-            {SortByID, "ID排序", FALSE, NULL, 0},
+            {SortByID, "编号排序", FALSE, NULL, 0},
             {SortByName, "姓名排序", FALSE, NULL, 0},
             {SortByBaseWage, "基本工资排序", FALSE, NULL, 0},
             {SortByTakeHomePay, "实发工资排序", FALSE, NULL, 0}
@@ -44,8 +45,10 @@ static MenuNode mainMenu[] =
 void EndOfModule()
 {
     //void (*action)(void) = NULL;
+    /*
     PrintLog("当前工资表数据如下:");
     PrintPayrollTable((Payroll *)payrollList.array, payrollList.arraySize);
+    */
     if(settings.autoSave)
     {
         SaveData(payrollList);
@@ -157,25 +160,25 @@ void EditData()
         FArray_CopyMemory(&tempPayroll.name, tempName, strlen(tempName) + 1);
         break;
     case 2:
-        InputFloat("请输入基本工资:", &tempPayroll.baseWage, "基本工资:%f\n");
+        InputFloat("请输入基本工资:", &tempPayroll.baseWage, "基本工资:%.2f\n");
         break;
     case 3:
-        InputFloat("请输入职务工资:", &tempPayroll.dutyWage, "职务工资:%f\n");
+        InputFloat("请输入职务工资:", &tempPayroll.dutyWage, "职务工资:%.2f\n");
         break;
     case 4:
-        InputFloat("请输入津贴:", &tempPayroll.bonus, "津贴:%f\n");
+        InputFloat("请输入津贴:", &tempPayroll.bonus, "津贴:%.2f\n");
         break;
     case 5:
-        InputFloat("请输入医疗保险:", &tempPayroll.healthInsurance, "医疗保险:%f\n");
+        InputFloat("请输入医疗保险:", &tempPayroll.healthInsurance, "医疗保险:%.2f\n");
         break;
     case 6:
-        InputFloat("请输入养老保险:", &tempPayroll.endowmentInsurance, "养老保险:%f\n");
+        InputFloat("请输入养老保险:", &tempPayroll.endowmentInsurance, "养老保险:%.2f\n");
         break;
     case 7:
-        InputFloat("请输入失业保险:", &tempPayroll.unemploymentInsurance, "失业保险:%f\n");
+        InputFloat("请输入失业保险:", &tempPayroll.unemploymentInsurance, "失业保险:%.2f\n");
         break;
     case 8:
-        InputFloat("请输入公积金:", &tempPayroll.providentFund, "公积金:%f\n");
+        InputFloat("请输入公积金:", &tempPayroll.providentFund, "公积金:%.2f\n");
         break;
     }
     //更新应发工资 个税 实付工资
@@ -549,11 +552,24 @@ int main()
     LoadData(&payrollList);
     while (loopMenu)
     {
+        PrintLog("当前工资表数据如下:");
+        PrintPayrollTable((Payroll *)payrollList.array, payrollList.arraySize);
         //获取当前光标位置
         cursor = GetCurrentCursor();
-        //开新的一行
-        cursor.X = 0;
-        cursor.Y++;
+        //打印个框框
+        printf( "                                    ************************************\n"
+                "                                    |         工资管理系统             |\n"
+                "                                    |                                  |\n"
+                "                                    |                                  |\n"
+                "                                    |                                  |\n"
+                "                                    |                                  |\n"
+                "                                    |                                  |\n"
+                "                                    |                                  |\n"
+                "                                    |                                  |\n"
+                "                                    |                                  |\n"
+                "                                    |                                  |\n"
+                "                                    ************************************\n");
+        cursor = COORD_Add(cursor, SHORT2COORD(40, 2));
         //展示菜单
         menuAction = ShowMenu(cursor, mainMenu, sizeof(mainMenu) / sizeof(MenuNode));
         //执行菜单返回的函数
